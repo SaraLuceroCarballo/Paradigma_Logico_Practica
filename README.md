@@ -1,7 +1,7 @@
 <div align="center">
 
 ```prolog
-?- aprender(paradigma_logico, prolog).
+?- aprender(paradigmaLogico, prolog).
 true.
 ```
 
@@ -31,8 +31,8 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 
 | # | Descripción | Estado |
 |---|-------------|--------|
-| [01](./Logial/) | *(pendiente)* | 🔲 Sin resolver |
-| [02](./League of Logics/) | *(pendiente)* | 🔲 Sin resolver |
+| [01](./Logial/) | *Recordar a algunos jugadores y en qué selección juega cada uno* | 🔲 Sin resolver |
+| [02](./"League of Logics"/) | *Crear un analizador de partidas y campeones* | 🔲 Sin resolver |
 
 
 > 🔲 Sin resolver · 🟡 En progreso · ✅ Resuelto
@@ -44,15 +44,15 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 Necesitás tener [SWI-Prolog](https://www.swi-prolog.org/Download.html) instalado.
 
 ```bash
-swipl ejercicio01/solucion.pl
+swipl nombre/solucion.pl
 ```
 
 ```prolog
-?- consult('ejercicio01/solucion.pl').
+?- consult('nombre/solucion.pl').
 ```
 
 ---
 
 <div align="center">
-  <sub>Materia: Paradigmas de Programación · Cátedra: Dodino, Lombardi, Passerini</sub>
+  <sub>Materia: Paradigmas de Programación </sub>
 </div>
