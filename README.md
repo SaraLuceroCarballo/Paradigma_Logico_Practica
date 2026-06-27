@@ -29,14 +29,18 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 
 ## Ejercicios
 
-| # | Descripción | Estado |
-|---|-------------|--------|
-| [01](./Logial/) | *Recordar a algunos jugadores y en qué selección juega cada uno* | 🔲 Sin resolver |
-| [02](./"League of Logics"/) | *Crear un analizador de partidas y campeones* | 🔲 Sin resolver |
-
+| # | Descripción | Tipo | Estado |
+|---|-------------|------|--------|
+| [01](./Logial/README.md) | *Recordar a algunos jugadores y en qué selección juega cada uno* | 📖 Práctica guiada | 🔲 Sin resolver |
+| [02] **My Little Prolony** |*Clasificación de ponies*| 🏋️ Práctica autónoma | ✅ Resuelto |
+| [03](./League%20of%20Logics/README.md) | *Crear un analizador de partidas y campeones* |📖 Práctica guiada | 🔲 Sin resolver |
+| [04] **Dota** |*pendiente*| 🏋️ Práctica autónoma | 🟡 En progreso |
+| [05] **Expreso Lógico** |*pendiente*| 📖 Práctica guiada | 🔲 Sin resolver |
 
 > 🔲 Sin resolver · 🟡 En progreso · ✅ Resuelto
+> 📖 Práctica guiada · 🏋️ Práctica autónoma
 
+**NOTA:** La práctica autónoma tiene repositorios individuales asociados dados por la catedra para su corrección
 ---
 
 ## Cómo correr un ejercicio
