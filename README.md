@@ -38,12 +38,29 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 | 05 | *Dota* | 🏋️ Práctica autónoma | 🟡 En progreso |
 | 06 | *Expreso Lógico* | 📖 Práctica guiada | 🔲 Sin resolver |
 | [07](./The_Dundies/README.md) | *The Dundies* | 🏋️ Práctica autónoma | 🔲 Sin resolver |
+| 08 | *Bloque Fest* | 📖 Práctica guiada | 🔲 Sin resolver |
 
 > 🔲 Sin resolver · 🟡 En progreso · ✅ Resuelto
 
 > 📖 Práctica guiada · 🏋️ Práctica autónoma
 
 **NOTA:** La práctica autónoma tiene repositorios individuales asociados dados por la catedra para su corrección
+
+
+
+## Parciales
+
+| # | Nombre | Tipo | Estado |
+|---|-------------|------|--------|
+| 01 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| 02 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| 03 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| 04 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| 05 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| 06 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| 07 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+
+> 🔲 Sin resolver · 🟡 En progreso · ✅ Resuelto
 
 
 ---
