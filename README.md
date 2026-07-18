@@ -52,9 +52,9 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 
 | # | Nombre | Tipo | Estado |
 |---|-------------|------|--------|
-| 01 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
-| 02 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
-| 03 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| [01](./31Minutos/README.md) | **31 Minutos** | *parcial 2025* | 🔲 Sin resolver |
+| [02](./Influencers/README.md) | **Influencers** | *simulacro de parcial 2025* | 🔲 Sin resolver |
+| 03 | *Pendiente* | *parcial 2020* | 🔲 Sin resolver |
 | 04 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
 | 05 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
 | 06 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
