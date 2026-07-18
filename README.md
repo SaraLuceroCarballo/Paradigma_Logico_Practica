@@ -52,13 +52,12 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 
 | # | Nombre | Tipo | Estado |
 |---|-------------|------|--------|
-| [01](./31Minutos/README.md) | **31 Minutos** | *parcial 2025* | 🔲 Sin resolver |
-| [02](./Influencers/README.md) | **Influencers** | *simulacro de parcial 2025* | 🔲 Sin resolver |
-| 03 | *Pendiente* | *parcial 2020* | 🔲 Sin resolver |
-| 04 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
-| 05 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
-| 06 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
-| 07 | *Pendiente* | *Pendiente* | 🔲 Sin resolver |
+| [01](./31Minutos/README.md) | **31 Minutos** | *parcial 2023/2025* | 🔲 Sin resolver |
+| [02](./ParqueAtracciones/README.md) | **Parque de atracciones** | *parcial 2024* | 🔲 Sin resolver |
+| [03](./Motivaciones/README.md) | **Motivaciones ¿piramidales?** | *parcial 2022* | 🔲 Sin resolver |
+| [04](./Influencers/README.md) | **Influencers** | *parcial 2021* | 🔲 Sin resolver |
+| [05](./CasasHogwarts/README.md) | **Las Casa de Hogwarts** | *parcial 2020* | 🔲 Sin resolver |
+| [06](./RallyDakar/README.md) | **Rally Dakar** | *parcial 2019* | 🔲 Sin resolver |
 
 > 🔲 Sin resolver · 🟡 En progreso · ✅ Resuelto
 
