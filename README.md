@@ -80,27 +80,23 @@ swipl nombre_solucion.pl
 ```prolog
 ?- consult('nombre_solucion.pl').
 ```
->> carga un archivo .pl desde dentro del intérprete.
-
+> carga un archivo .pl desde dentro del intérprete.
 ```prolog
 ?- halt.
 ```
->> cierra el intérprete y volvés a la terminal
-
+> cierra el intérprete y volvés a la terminal
 ```prolog
 ?- make.
 ```
->> recarga/actualiza todos los archivos que se cargaron, útil cuando  se edita el .pl y se quiere ver los cambios sin salir.
-
+>recarga/actualiza todos los archivos que se cargaron, útil cuando  se edita el .pl y se quiere ver los cambios sin salir.
 ```prolog
 ?- trace.
 ```
->> paso a paso para ver cómo Prolog resuelve una consulta.
-
+> paso a paso para ver cómo Prolog resuelve una consulta.
 ```prolog
 ?- notrace.
 ```
->> desactiva el trace.
+> desactiva el trace.
 
 ---
 
