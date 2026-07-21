@@ -21,15 +21,15 @@ ultimoMundial(uruguay,1950).
 %% 3
 fueCampeon(Jugador):-
     juegaEn(Equipo,Jugador),
-    ultimoMundial(Seleccion,Fecha).
+    ultimoMundial(Equipo,_).
 
 %4
 esCrack(messi).
 
 esCrack(Jugador):-
     juegaEn(argentina,Jugador),
-    juegaEn(interDeMiami,OtroJugador),
-    Jugador=OtroJugador.
+    juegaEn(interDeMiami,Jugador).
+  
 
 %%5 partidosYgoles(juador, partidos, goles)
 partidosYgoles(messi,1140,900).
@@ -39,9 +39,19 @@ partidosYgoles(pepita, 1, 7).
 
 
 %6. por tener mas goles que partidos jugados.
-esValioso(Jugador):-
-%
+goles(Jugador, Goles):-
+    estadisticas(Jugador, _, Goles).
 
+partidos(Jugador, Partidos):-
+    estadisticas(Jugador, Partidos, _).
+
+masGolesQuePartidos(Jugador):-
+    goles(Jugador, Goles),
+    partidos(Jugador, Partidos),
+    Goles > Partidos.
+
+esValioso(Jugador):-
+    masGolesQuePartidos(Jugador).
 
 % por compartir equipo con un crack.
 compatenClub(Jugador, OtroJugador):-
