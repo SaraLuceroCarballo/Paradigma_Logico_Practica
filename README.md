@@ -71,7 +71,7 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 |--------|------|
 | [01](https://saraluceroCarballo.github.io/Paradigma_Logico_Practica/MaterialTeorico/guia_modulos1y2.html) | **Predicados, Individuos, Consultas, Universo Cerrado, Variables, Reglas, Inversibilidad** |
 | [02](https://saraluceroCarballo.github.io/Paradigma_Logico_Practica/MaterialTeorico/guia-modulos-3-4.html) | **Individuos simples, Pattern matching, Listas, Functores, not/1, forall/2, findall/3** |
-| [03](https://saraluceroCarballo.github.io/Paradigma_Logico_Practica/MaterialTeorico/) | **Recursividad y Delegación** |
+| [03](https://saraluceroCarballo.github.io/Paradigma_Logico_Practica/MaterialTeorico/logico-modulos-5-6.html) | **Recursividad y Delegación** |
 | [04](https://saraluceroCarballo.github.io/Paradigma_Logico_Practica/MaterialTeorico/modulo7_explosion_combinatoria.html) | **Explosión Combinatoria** |
 
 

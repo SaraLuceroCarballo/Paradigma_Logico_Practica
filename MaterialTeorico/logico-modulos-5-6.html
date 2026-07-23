@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paradigma Lógico — Módulos 5 y 6</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
+
+  :root {
+    --bg:        #0e1117;
+    --surface:   #161b27;
+    --surface2:  #1e2535;
+    --border:    #2a3347;
+    --accent:    #7c6af5;
+    --accent2:   #4ecdc4;
+    --accent3:   #f7c948;
+    --accent4:   #e05a6b;
+    --text:      #c8d0e0;
+    --text-dim:  #6b7a99;
+    --text-head: #eef1f8;
+    --green:     #56d364;
+    --orange:    #f78166;
+    --code-bg:   #111827;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ─── NAV ─────────────────────────────────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14,17,23,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 52px;
+    overflow-x: auto;
+  }
+  nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 0 1rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: var(--text-head); }
+  nav a.m5 { border-color: var(--accent); color: var(--accent); }
+  nav a.m6 { border-color: var(--accent2); color: var(--accent2); }
+
+  /* ─── HERO ────────────────────────────────────────── */
+  .hero {
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a1f3a 0%, var(--bg) 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: var(--text-head);
+    line-height: 1.15;
+    margin-bottom: .75rem;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+  }
+  .pills {
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .pill-m5 { background: rgba(124,106,245,.18); color: var(--accent); border: 1px solid rgba(124,106,245,.35); }
+  .pill-m6 { background: rgba(78,205,196,.18); color: var(--accent2); border: 1px solid rgba(78,205,196,.35); }
+
+  /* ─── LAYOUT ──────────────────────────────────────── */
+  .wrapper { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ─── MODULE SEPARATOR ────────────────────────────── */
+  .module-header {
+    margin: 4rem 0 2.5rem;
+    padding: 2rem 2rem 1.75rem;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+  }
+  .module-header.m5 { background: rgba(124,106,245,.08); border: 1px solid rgba(124,106,245,.25); }
+  .module-header.m5::before { box-shadow: inset 0 0 60px rgba(124,106,245,.05); }
+  .module-header.m6 { background: rgba(78,205,196,.08); border: 1px solid rgba(78,205,196,.25); }
+  .module-header .mod-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: .5rem;
+  }
+  .m5 .mod-num { color: var(--accent); }
+  .m6 .mod-num { color: var(--accent2); }
+  .module-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--text-head);
+  }
+  .module-header p {
+    color: var(--text-dim);
+    font-size: 13.5px;
+    margin-top: .5rem;
+  }
+
+  /* ─── SECTIONS ────────────────────────────────────── */
+  section { margin-bottom: 3rem; }
+  section h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-head);
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+  section h3 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .tag-concept { background: rgba(124,106,245,.2); color: var(--accent); }
+  .tag-example { background: rgba(78,205,196,.2); color: var(--accent2); }
+  .tag-warning { background: rgba(247,201,72,.2); color: var(--accent3); }
+  .tag-smell   { background: rgba(224,90,107,.2); color: var(--accent4); }
+  .tag-design  { background: rgba(86,211,100,.2); color: var(--green); }
+
+  p { margin-bottom: .85rem; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ─── CODE BLOCKS ─────────────────────────────────── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 1.25rem 0;
+    overflow: hidden;
+  }
+  .code-block-label {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .code-block pre {
+    padding: 1.1rem 1.4rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #abb2bf;
+  }
+  /* syntax highlight colors */
+  .kw  { color: #c678dd; }   /* keyword / functor head */
+  .pred{ color: #61afef; }   /* predicate name */
+  .var { color: #e5c07b; }   /* variable */
+  .atom{ color: #98c379; }   /* atom / string */
+  .num { color: #d19a66; }   /* number */
+  .op  { color: #56b6c2; }   /* operator */
+  .cmt { color: #5c6370; font-style: italic; }
+
+  /* ─── CALLOUTS ────────────────────────────────────── */
+  .callout {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 14px;
+    border-left: 3px solid;
+  }
+  .callout-info  { background: rgba(124,106,245,.1); border-color: var(--accent); }
+  .callout-tip   { background: rgba(78,205,196,.1);  border-color: var(--accent2); }
+  .callout-warn  { background: rgba(247,201,72,.1);  border-color: var(--accent3); }
+  .callout-smell { background: rgba(224,90,107,.1);  border-color: var(--accent4); }
+  .callout strong { color: var(--text-head); display: block; margin-bottom: .3rem; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* ─── SMELL CARDS ─────────────────────────────────── */
+  .smell-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  @media (max-width: 620px) { .smell-grid { grid-template-columns: 1fr; } }
+  .smell-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+  }
+  .smell-card:hover { border-color: var(--accent4); transition: border-color .2s; }
+  .smell-card .smell-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent4);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: .3rem;
+  }
+  .smell-card h4 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-head);
+    margin-bottom: .4rem;
+  }
+  .smell-card p { font-size: 12.5px; color: var(--text-dim); margin: 0; }
+
+  /* ─── COMPARISON TABLE ────────────────────────────── */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  @media (max-width: 620px) { .compare { grid-template-columns: 1fr; } }
+  .compare-col { background: var(--surface); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .compare-col.bad  { border-color: rgba(224,90,107,.4); }
+  .compare-col.good { border-color: rgba(86,211,100,.4); }
+  .compare-head {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+  .compare-col.bad  .compare-head { background: rgba(224,90,107,.15); color: var(--accent4); }
+  .compare-col.good .compare-head { background: rgba(86,211,100,.15); color: var(--green); }
+  .compare-col pre {
+    padding: .9rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #abb2bf;
+    overflow-x: auto;
+  }
+
+  /* ─── DEFINITION LIST ─────────────────────────────── */
+  dl { margin: 1rem 0; }
+  dt { font-weight: 700; color: var(--text-head); margin-top: .75rem; font-size: 14px; }
+  dd { color: var(--text); margin-left: 1.25rem; font-size: 14px; margin-top: .15rem; }
+
+  /* ─── SUMMARY BOX ─────────────────────────────────── */
+  .summary-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .summary-box h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .summary-box ul { list-style: none; }
+  .summary-box li {
+    padding: .35rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+  }
+  .summary-box li:last-child { border-bottom: none; }
+  .summary-box li::before { content: '→'; color: var(--accent); font-family: monospace; flex-shrink: 0; margin-top: 1px; }
+
+  /* ─── INLINE CODE ─────────────────────────────────── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #e5c07b;
+  }
+
+  /* ─── FOOTER ──────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-dim);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#m5" class="m5">Módulo 5 · Recursividad</a>
+  <a href="#definicion">Definición</a>
+  <a href="#ancestros">Ancestros</a>
+  <a href="#distancias">Distancias</a>
+  <a href="#member">member/2</a>
+  <a href="#nth1">nth1/3</a>
+  <a href="#m6" class="m6">Módulo 6 · Diseño</a>
+  <a href="#modelado">Modelado</a>
+  <a href="#acoplamiento">Acoplamiento</a>
+  <a href="#codesmells">Code Smells</a>
+  <a href="#resumen">Resumen</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Paradigma Lógico · Prolog</div>
+  <h1>Módulos <span>5</span> y <span style="color:var(--accent2)">6</span></h1>
+  <p class="hero-sub">Recursividad, predicados de listas, diseño por componentes, acoplamiento y code smells.</p>
+  <div class="pills">
+    <span class="pill pill-m5">Módulo 5 · Recursividad</span>
+    <span class="pill pill-m6">Módulo 6 · Delegación & Code smells</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  MÓDULO 5                                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="wrapper">
+
+  <div id="m5" class="module-header m5">
+    <div class="mod-num">Módulo 5</div>
+    <h2>Recursividad en Prolog</h2>
+    <p>Cómo definir predicados que se refieren a sí mismos y las herramientas integradas que lo aprovechan.</p>
+  </div>
+
+  <!-- DEFINICIÓN -->
+  <section id="definicion">
+    <h3><span class="tag tag-concept">Concepto</span> ¿Qué es la recursividad?</h3>
+
+    <p>La <strong style="color:var(--text-head)">recursividad</strong> es que un elemento de software se defina en función de sí mismo. En el paradigma lógico, ese elemento son los predicados: una cláusula que en su cuerpo hace referencia al mismo predicado que está definiendo.</p>
+
+    <div class="callout callout-info">
+      <strong>Clave conceptual</strong>
+      En Prolog no hay variables de estado ni bucles. La forma natural de expresar procesos que se repiten o que requieren "profundidad" es la recursividad.
+    </div>
+
+    <p>Para que una definición recursiva sea correcta necesita siempre dos partes:</p>
+
+    <dl>
+      <dt>Caso base</dt>
+      <dd>La cláusula que corta la recursión. No hace referencia al propio predicado. Define el caso más simple/mínimo del problema.</dd>
+      <dt>Caso recursivo</dt>
+      <dd>La cláusula que sí se refiere al propio predicado, pero con argumentos <em>más pequeños</em> o <em>más cercanos al caso base</em>. Sin esto la recursión sería infinita.</dd>
+    </dl>
+
+    <div class="callout callout-warn">
+      <strong>Error frecuente</strong>
+      Definir solo el caso recursivo (sin caso base) provoca una pila de llamadas infinita que termina en un error de stack overflow.
+    </div>
+  </section>
+
+  <!-- ANCESTROS -->
+  <section id="ancestros">
+    <h3><span class="tag tag-example">Ejemplo</span> Ancestros — recursión sobre una jerarquía</h3>
+
+    <p>Supongamos que queremos saber quiénes son los ancestros de una persona. Declarativamente:</p>
+    <ul style="margin: .5rem 0 1rem 1.5rem; font-size:14px;">
+      <li>Mis ancestros son mis padres <em>y</em></li>
+      <li>los ancestros de mis padres.</li>
+    </ul>
+    <p>El <em>y</em> en castellano funciona como <em>o lógico</em>: alcanza con que se cumpla cualquiera de las dos condiciones. Por eso usamos dos cláusulas separadas:</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Prolog · ancestros.pl</div>
+      <pre><span class="cmt">% Base de hechos</span>
+<span class="pred">padre</span>(<span class="atom">tatara</span>, <span class="atom">bisa</span>).
+<span class="pred">padre</span>(<span class="atom">bisa</span>, <span class="atom">abu</span>).
+<span class="pred">padre</span>(<span class="atom">abu</span>, <span class="atom">padre</span>).
+<span class="pred">padre</span>(<span class="atom">padre</span>, <span class="atom">hijo</span>).
+
+<span class="cmt">% Caso base: el padre directo es ancestro</span>
+<span class="pred">ancestro</span>(<span class="var">Padre</span>, <span class="var">Persona</span>) :- <span class="pred">padre</span>(<span class="var">Padre</span>, <span class="var">Persona</span>).
+
+<span class="cmt">% Caso recursivo: el ancestro del padre también es mi ancestro</span>
+<span class="pred">ancestro</span>(<span class="var">Ancestro</span>, <span class="var">Persona</span>) :-
+    <span class="pred">padre</span>(<span class="var">Padre</span>, <span class="var">Persona</span>),
+    <span class="pred">ancestro</span>(<span class="var">Ancestro</span>, <span class="var">Padre</span>).</pre>
+    </div>
+
+    <p>Consulta de ejemplo y resultados:</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Consola SWI-Prolog</div>
+      <pre><span class="op">?-</span> <span class="pred">ancestro</span>(<span class="atom">tatara</span>, <span class="var">Quien</span>).
+<span class="var">Quien</span> <span class="op">=</span> <span class="atom">bisa</span> <span class="op">;</span>
+<span class="var">Quien</span> <span class="op">=</span> <span class="atom">abu</span>  <span class="op">;</span>
+<span class="var">Quien</span> <span class="op">=</span> <span class="atom">padre</span> <span class="op">;</span>
+<span class="var">Quien</span> <span class="op">=</span> <span class="atom">hijo</span>  <span class="op">;</span>
+<span class="atom">false</span>.</pre>
+    </div>
+
+    <p>Prolog recorre las cláusulas y encuentra todas las soluciones posibles.</p>
+
+    <div class="callout callout-tip">
+      <strong>¿Es inversible ancestro/2?</strong>
+      Dejar <em>ambas</em> variables libres (<code>?- ancestro(Ancestro, Quien).</code>) sí es posible y devuelve todos los pares (ancestro, descendiente) de la base de conocimiento, siempre y cuando no haya ciclos. La inversibilidad es total.
+    </div>
+  </section>
+
+  <!-- DISTANCIAS -->
+  <section id="distancias">
+    <h3><span class="tag tag-example">Ejemplo</span> Distancias entre ciudades — recursión con aritmética</h3>
+
+    <p>Queremos calcular la distancia entre dos puntos que pueden estar conectados directamente o mediante escala. La base de hechos es:</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Prolog · distancias.pl</div>
+      <pre><span class="pred">distancia</span>(<span class="atom">buenosAires</span>, <span class="atom">puertoMadryn</span>, <span class="num">1300</span>).
+<span class="pred">distancia</span>(<span class="atom">puertoMadryn</span>, <span class="atom">puertoDeseado</span>, <span class="num">732</span>).
+<span class="pred">distancia</span>(<span class="atom">puertoDeseado</span>, <span class="atom">rioGallegos</span>, <span class="num">736</span>).
+<span class="pred">distancia</span>(<span class="atom">puertoDeseado</span>, <span class="atom">calafate</span>, <span class="num">979</span>).
+<span class="pred">distancia</span>(<span class="atom">rioGallegos</span>, <span class="atom">calafate</span>, <span class="num">304</span>).
+<span class="pred">distancia</span>(<span class="atom">calafate</span>, <span class="atom">chalten</span>, <span class="num">213</span>).
+
+<span class="cmt">% Caso base: conocemos la distancia directa</span>
+<span class="pred">kilometrosViaje</span>(<span class="var">Origen</span>, <span class="var">Destino</span>, <span class="var">Kms</span>) :-
+    <span class="pred">distancia</span>(<span class="var">Origen</span>, <span class="var">Destino</span>, <span class="var">Kms</span>).
+
+<span class="cmt">% Caso recursivo: pasamos por un punto intermedio</span>
+<span class="pred">kilometrosViaje</span>(<span class="var">Origen</span>, <span class="var">Destino</span>, <span class="var">KmsTotales</span>) :-
+    <span class="pred">distancia</span>(<span class="var">Origen</span>, <span class="var">PuntoIntermedio</span>, <span class="var">KmsIntermedios</span>),
+    <span class="pred">kilometrosViaje</span>(<span class="var">PuntoIntermedio</span>, <span class="var">Destino</span>, <span class="var">KmsFinales</span>),
+    <span class="var">KmsTotales</span> <span class="kw">is</span> <span class="var">KmsIntermedios</span> <span class="op">+</span> <span class="var">KmsFinales</span>.</pre>
+    </div>
+
+    <p>Este predicado encuentra <em>todas</em> las rutas posibles entre dos ciudades, no solo la más corta. Por eso para Puerto Madryn → Calafate existen dos respuestas: 1711 y 1772 km.</p>
+
+    <div class="callout callout-warn">
+      <strong>Problema: dirección única</strong>
+      Si los hechos de <code>distancia/3</code> solo están en un sentido, <code>kilometrosViaje(calafate, buenosAires, Kms)</code> devuelve <code>false</code>. Solución: agregar un predicado <code>totalViaje/3</code> que admita ambas direcciones.
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-label">Prolog · viaje bidireccional</div>
+      <pre><span class="pred">totalViaje</span>(<span class="var">Origen</span>, <span class="var">Destino</span>, <span class="var">Kms</span>) :-
+    <span class="pred">kilometrosViaje</span>(<span class="var">Origen</span>, <span class="var">Destino</span>, <span class="var">Kms</span>).
+<span class="pred">totalViaje</span>(<span class="var">Origen</span>, <span class="var">Destino</span>, <span class="var">Kms</span>) :-
+    <span class="pred">kilometrosViaje</span>(<span class="var">Destino</span>, <span class="var">Origen</span>, <span class="var">Kms</span>).</pre>
+    </div>
+
+    <p>Ahora <code>?- totalViaje(calafate, buenosAires, Kms).</code> devuelve 3011 y 3072 (las dos rutas posibles en ese sentido).</p>
+  </section>
+
+  <!-- MEMBER/2 -->
+  <section id="member">
+    <h3><span class="tag tag-concept">Predicado</span> <code>member/2</code> — pertenencia a una lista</h3>
+
+    <p>Un elemento <code>X</code> pertenece a una lista si:</p>
+    <ul style="margin: .5rem 0 1rem 1.5rem; font-size:14px;">
+      <li>es la <strong>cabeza</strong> de esa lista, o</li>
+      <li>pertenece a la <strong>cola</strong> de esa lista (y aquí viene la recursión, porque la cola también es una lista).</li>
+    </ul>
+
+    <div class="code-block">
+      <div class="code-block-label">Definición de member/2</div>
+      <pre><span class="cmt">% Caso base: X está en la cabeza</span>
+<span class="pred">member</span>(<span class="var">X</span>, [<span class="var">X</span>|<span class="kw">_</span>]).
+
+<span class="cmt">% Caso recursivo: X está en la cola Z</span>
+<span class="pred">member</span>(<span class="var">X</span>, [<span class="kw">_</span>|<span class="var">Z</span>]) :- <span class="pred">member</span>(<span class="var">X</span>, <span class="var">Z</span>).</pre>
+    </div>
+
+    <p>¿Qué pasa con la lista vacía? No hay caso para <code>[]</code> porque <code>[]</code> no tiene cabeza ni cola — es indivisible. Esto se conecta con el <strong>Principio de Universo Cerrado</strong>: lo que no puede probarse es falso, y ningún elemento puede pertenecer a una lista vacía.</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Consultas de ejemplo</div>
+      <pre><span class="op">?-</span> <span class="pred">member</span>(<span class="num">5</span>, [<span class="num">5</span>, <span class="num">8</span>]).    <span class="cmt">% true — 5 es la cabeza</span>
+<span class="op">?-</span> <span class="pred">member</span>(<span class="num">5</span>, [<span class="num">4</span>, <span class="num">6</span>]).    <span class="cmt">% false — no está</span>
+<span class="op">?-</span> <span class="pred">member</span>(<span class="num">5</span>, [<span class="num">4</span>, <span class="num">5</span>]).    <span class="cmt">% true — 5 está en la cola</span>
+<span class="op">?-</span> <span class="pred">member</span>(<span class="num">5</span>, [<span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">6</span>]). <span class="cmt">% true — profundidad 2</span></pre>
+    </div>
+
+    <p><strong style="color:var(--text-head)">Inversibilidad de member/2.</strong> Como el primer argumento puede quedar libre, es posible consultar:</p>
+
+    <div class="code-block">
+      <div class="code-block-label">member/2 invertido</div>
+      <pre><span class="op">?-</span> <span class="pred">member</span>(<span class="var">X</span>, [<span class="num">3</span>, <span class="num">4</span>, <span class="num">6</span>]).
+<span class="var">X</span> <span class="op">=</span> <span class="num">3</span> <span class="op">;</span>
+<span class="var">X</span> <span class="op">=</span> <span class="num">4</span> <span class="op">;</span>
+<span class="var">X</span> <span class="op">=</span> <span class="num">6</span>.</pre>
+    </div>
+
+    <div class="callout callout-tip">
+      <strong>¿Y si dejamos libre la Lista?</strong>
+      <code>?- member(6, Lista).</code> es técnicamente posible pero genera listas infinitas: <code>[6|_]</code>, <code>[_,6|_]</code>, etc. No tiene sentido práctico porque el universo de listas que contienen un 6 es infinito.
+    </div>
+  </section>
+
+  <!-- NTH1/3 -->
+  <section id="nth1">
+    <h3><span class="tag tag-concept">Predicado</span> <code>nth1/3</code> — elemento en posición N</h3>
+
+    <p><code>nth1/3</code> relaciona una posición (contando desde 1), una lista y el elemento que ocupa esa posición. Es inversible: puede encontrar el elemento dada la posición o la posición dado el elemento.</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Consultas de nth1/3</div>
+      <pre><span class="op">?-</span> <span class="pred">nth1</span>(<span class="num">2</span>, [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">8</span>, <span class="num">13</span>], <span class="var">Elemento</span>).
+<span class="var">Elemento</span> <span class="op">=</span> <span class="num">2</span>.
+
+<span class="op">?-</span> <span class="pred">nth1</span>(<span class="var">Posicion</span>, [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">8</span>, <span class="num">13</span>], <span class="num">5</span>).
+<span class="var">Posicion</span> <span class="op">=</span> <span class="num">4</span>.</pre>
+    </div>
+
+    <p>Podemos implementar nuestra versión propia llamada <code>enesimo/3</code> para entender cómo funciona internamente:</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Implementación manual de enesimo/3</div>
+      <pre><span class="cmt">% Caso base: el elemento está en la cabeza → posición 1</span>
+<span class="pred">enesimo</span>(<span class="num">1</span>, [<span class="var">Elemento</span>|<span class="kw">_</span>], <span class="var">Elemento</span>).
+
+<span class="cmt">% Caso recursivo: buscar en la cola e incrementar posición</span>
+<span class="pred">enesimo</span>(<span class="var">Posicion</span>, [<span class="kw">_</span>|<span class="var">Resto</span>], <span class="var">Elemento</span>) :-
+    <span class="pred">enesimo</span>(<span class="var">PosicionCola</span>, <span class="var">Resto</span>, <span class="var">Elemento</span>),
+    <span class="var">Posicion</span> <span class="kw">is</span> <span class="var">PosicionCola</span> <span class="op">+</span> <span class="num">1</span>.</pre>
+    </div>
+
+    <p>La recursión avanza consumiendo la cabeza de la lista. Cuando el elemento está en la posición 1 de algún sufijo, el resultado se construye de vuelta sumando 1 por cada nivel al volver.</p>
+
+    <div class="summary-box">
+      <h4>Resumen · Módulo 5</h4>
+      <ul>
+        <li>La recursividad en Prolog = un predicado definido en términos de sí mismo.</li>
+        <li>Siempre necesita caso base (sin auto-referencia) + caso recursivo.</li>
+        <li>Prolog puede encontrar múltiples soluciones para predicados recursivos si no hay restricciones de inversibilidad.</li>
+        <li><code>member/2</code> es inversible en el primer argumento; no tiene sentido dejar libre el segundo.</li>
+        <li><code>nth1/3</code> relaciona posición, lista y elemento; es inversible en los tres.</li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!--  MÓDULO 6                                              -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <div id="m6" class="module-header m6">
+    <div class="mod-num">Módulo 6</div>
+    <h2>Diseño: Delegación, Acoplamiento y Code Smells</h2>
+    <p>Cómo estructurar predicados, medir su calidad y detectar errores conceptuales frecuentes.</p>
+  </div>
+
+  <!-- ELEMENTOS DE DISEÑO -->
+  <section id="modelado">
+    <h3><span class="tag tag-design">Diseño</span> Elementos de diseño y modelado</h3>
+
+    <p><strong style="color:var(--text-head)">Diseñar</strong> es tomar tres decisiones:</p>
+    <ol style="margin: .5rem 0 1rem 1.5rem; font-size:14px; line-height:2;">
+      <li>¿Cuáles son los <strong>componentes</strong>?</li>
+      <li>¿Qué <strong>responsabilidades</strong> tiene cada uno?</li>
+      <li>¿Qué <strong>relaciones</strong> hay entre ellos?</li>
+    </ol>
+
+    <p>Dentro del paradigma lógico los componentes son <strong>predicados e individuos</strong>. La responsabilidad de un predicado es la relación que define: <code>member/2</code> determina pertenencia a una lista; <code>forall/2</code> verifica que todos satisfagan una condición.</p>
+
+    <h4 style="margin:1.5rem 0 .75rem; color:var(--text-head); font-size:1rem;">Caso práctico: empresa de remises</h4>
+
+    <p>El relevamiento pide saber: qué choferes viajaron a Villa del Parque, quiénes manejaron cierto auto en cierta fecha, y qué viajes hizo un cliente. Identificamos las entidades:</p>
+
+    <dl>
+      <dt>Clientes</dt><dd>Se representan como functores: <code>cliente(3, sonia)</code>.</dd>
+      <dt>Choferes</dt><dd>Átomos simples: <code>matias</code>.</dd>
+      <dt>Autos</dt><dd>Functores: <code>auto(gol, "ZFE447")</code>.</dd>
+      <dt>Fechas</dt><dd>Functores: <code>fecha(11, 2, 2017)</code>.</dd>
+      <dt>Viajes</dt><dd>Predicado de aridad 8 que agrupa todo lo anterior.</dd>
+    </dl>
+
+    <div class="code-block">
+      <div class="code-block-label">Prolog · modelado de viajes</div>
+      <pre><span class="pred">viaje</span>(<span class="pred">cliente</span>(<span class="num">3</span>, <span class="atom">sonia</span>), <span class="pred">fecha</span>(<span class="num">11</span>, <span class="num">2</span>, <span class="num">2017</span>),
+     <span class="pred">auto</span>(<span class="atom">gol</span>, <span class="atom">"ZFE447"</span>), <span class="atom">matias</span>,
+     <span class="atom">"Dorrego y Roque Pérez"</span>, <span class="atom">"Hudson"</span>, <span class="atom">"Cadorna 283"</span>, <span class="atom">"Wilde"</span>).</pre>
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Functor vs. Predicado</strong>
+      <code>cliente/2</code> en el ejemplo es un <strong>functor</strong> (estructura de datos dentro de un argumento), no un predicado de primer nivel. Por eso el universo de clientes no es explícito — se deriva con un predicado generador: <code>clienteReal(C) :- viaje(C, _, _, _, _, _, _, _).</code>
+    </div>
+  </section>
+
+  <!-- ACOPLAMIENTO -->
+  <section id="acoplamiento">
+    <h3><span class="tag tag-design">Diseño</span> Acoplamiento</h3>
+
+    <p>El <strong style="color:var(--text-head)">acoplamiento</strong> es el grado en que los componentes se conocen entre sí. No es inherentemente malo — es necesario para resolver requerimientos — pero conviene mantenerlo <em>localizado</em>.</p>
+
+    <div class="code-block">
+      <div class="code-block-label">Ejemplo: terminoAnio/2</div>
+      <pre><span class="pred">terminoAnio</span>(<span class="var">Alumno</span>, <span class="var">Anio</span>) :-
+    <span class="pred">forall</span>(<span class="pred">materia</span>(<span class="var">Materia</span>, <span class="var">Anio</span>), <span class="pred">aprobo</span>(<span class="var">Alumno</span>, <span class="var">Materia</span>)).
+
+<span class="pred">aprobo</span>(<span class="var">Alumno</span>, <span class="var">Materia</span>) :-
+    <span class="pred">nota</span>(<span class="var">Alumno</span>, <span class="var">Materia</span>, <span class="var">Nota</span>), <span class="var">Nota</span> <span class="op">>=</span> <span class="num">6</span>.</pre>
+    </div>
+
+    <p><code>terminoAnio/2</code> conoce a <code>materia/2</code> y a <code>aprobo/2</code>. Ese acoplamiento es buscado. A su vez, <code>aprobo/2</code> conoce a <code>nota/3</code>. El árbol de dependencias es:</p>
+
+    <div class="callout callout-tip">
+      <strong>terminoAnio/2 → forall/2 → materia/1</strong><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘ aprobo/2 → nota/3
+    </div>
+
+    <p>Si cambia el modelo de notas (de un escalar a una lista con aplazos), <strong>solo hay que tocar <code>aprobo/2</code></strong>. El predicado <code>terminoAnio/2</code> no necesita cambiar porque no conoce los detalles de cómo se guarda la nota:</p>
+
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Modelo viejo (nota escalar)</div>
+        <pre><span class="pred">nota</span>(<span class="atom">raul</span>, <span class="atom">pdp</span>, <span class="num">9</span>).
+<span class="pred">nota</span>(<span class="atom">herminio</span>, <span class="atom">pdp</span>, <span class="num">6</span>).
+
+<span class="pred">aprobo</span>(<span class="var">A</span>, <span class="var">M</span>) :-
+    <span class="pred">nota</span>(<span class="var">A</span>, <span class="var">M</span>, <span class="var">Nota</span>),
+    <span class="var">Nota</span> >= 6.</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Modelo nuevo (lista de notas)</div>
+        <pre><span class="pred">nota</span>(<span class="atom">raul</span>, <span class="atom">pdp</span>, [<span class="num">9</span>]).
+<span class="pred">nota</span>(<span class="atom">herminio</span>, <span class="atom">pdp</span>, [<span class="num">2</span>, <span class="num">2</span>, <span class="num">6</span>]).
+
+<span class="pred">aprobo</span>(<span class="var">A</span>, <span class="var">M</span>) :-
+    <span class="pred">nota</span>(<span class="var">A</span>, <span class="var">M</span>, <span class="var">Notas</span>),
+    <span class="pred">last</span>(<span class="var">Notas</span>, <span class="var">Nota</span>),
+    <span class="var">Nota</span> >= 6.</pre>
+      </div>
+    </div>
+
+    <p>Solo cambió <code>aprobo/2</code>. <code>terminoAnio/2</code> quedó intacto. Esto demuestra que el acoplamiento estaba bien diseñado: los detalles de representación están encapsulados detrás de un predicado de interfaz.</p>
+  </section>
+
+  <!-- CODE SMELLS -->
+  <section id="codesmells">
+    <h3><span class="tag tag-smell">Code Smells</span> Antipatrones en Prolog</h3>
+
+    <p>Los <strong style="color:var(--text-head)">code smells</strong> son señales de que la solución, aunque funcione, debería mejorarse. El proceso de mejora sin cambiar el comportamiento se llama <strong>refactorización</strong>.</p>
+    <p>A continuación los 10 code smells del módulo, con ejemplos concretos de código malo y su versión mejorada.</p>
+
+    <!-- SMELL 1 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">① Negación vs. Aserción</h4>
+    <p>Usar doble negación cuando <code>forall/2</code> expresa la misma idea de forma directa.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Doble negación (difícil de leer)</div>
+        <pre><span class="pred">todosSiguenA</span>(<span class="var">Rey</span>) :-
+    <span class="pred">personaje</span>(<span class="var">Rey</span>),
+    <span class="kw">not</span>((<span class="pred">personaje</span>(<span class="var">P</span>),
+         <span class="kw">not</span>(<span class="pred">sigueA</span>(<span class="var">P</span>, <span class="var">Rey</span>)))).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Aserción con forall</div>
+        <pre><span class="pred">todosSiguenA</span>(<span class="var">Rey</span>) :-
+    <span class="pred">personaje</span>(<span class="var">Rey</span>),
+    <span class="pred">forall</span>(<span class="pred">personaje</span>(<span class="var">P</span>),
+           <span class="pred">sigueA</span>(<span class="var">P</span>, <span class="var">Rey</span>)).</pre>
+      </div>
+    </div>
+    <p>La transformación lógica es: <em>¬∃x / p(x) ∧ ¬q(x)</em> equivale a <em>∀x / p(x) ⟹ q(x)</em>.</p>
+
+    <!-- SMELL 2 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">② Evitar duplicidades</h4>
+    <p>No repetir lógica similar para distintos tipos de entidades. Unificar bajo un predicado polimórfico.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Predicados separados para bares y museos</div>
+        <pre><span class="pred">baresCopados</span>(<span class="var">Ciudad</span>, <span class="var">Bares</span>) :-
+    <span class="pred">findall</span>(<span class="pred">bar</span>(<span class="var">C</span>),
+      (<span class="pred">puntoDeInteres</span>(<span class="pred">bar</span>(<span class="var">C</span>), <span class="var">Ciudad</span>),
+       <span class="var">C</span> > 4), <span class="var">Bares</span>).
+<span class="pred">museosCopados</span>(<span class="var">Ciudad</span>, <span class="var">Museos</span>) :-
+    <span class="pred">findall</span>(<span class="pred">museo</span>(<span class="atom">cienciasNat</span>),
+      <span class="pred">puntoDeInteres</span>(<span class="pred">museo</span>(<span class="atom">cienciasNat</span>),
+        <span class="var">Ciudad</span>), <span class="var">Museos</span>).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Predicado unificado polimórfico</div>
+        <pre><span class="pred">cosasCopadas</span>(<span class="var">Ciudad</span>, <span class="var">Cosas</span>) :-
+    <span class="pred">findall</span>(<span class="var">Cosa</span>,
+      (<span class="pred">puntoDeInteres</span>(<span class="var">Cosa</span>, <span class="var">Ciudad</span>),
+       <span class="pred">copada</span>(<span class="var">Cosa</span>)),
+      <span class="var">Cosas</span>).
+
+<span class="pred">copada</span>(<span class="pred">museo</span>(<span class="atom">cienciasNaturales</span>)).
+<span class="pred">copada</span>(<span class="pred">bar</span>(<span class="var">V</span>)) :- <span class="var">V</span> > <span class="num">4</span>.</pre>
+      </div>
+    </div>
+    <p>Al agregar un nuevo tipo de lugar copado (ej: centro cultural), solo se agrega un hecho/regla de <code>copada/1</code>. El resto no cambia.</p>
+
+    <!-- SMELL 3 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">③ Keep it simple — existencia simple</h4>
+    <p>Si solo necesitás saber que <em>existe</em> algo, no armes una lista para luego chequear su longitud.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ findall + length para existencia</div>
+        <pre><span class="pred">inFraganti</span>(<span class="var">Delito</span>, <span class="var">Del</span>) :-
+    <span class="pred">cometio</span>(<span class="var">Delito</span>, <span class="var">Del</span>),
+    <span class="pred">findall</span>(<span class="var">T</span>, <span class="pred">testigo</span>(<span class="var">Delito</span>,<span class="var">T</span>), <span class="var">Ts</span>),
+    <span class="pred">length</span>(<span class="var">Ts</span>, <span class="var">N</span>),
+    <span class="var">N</span> > <span class="num">0</span>.</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Existencia directa con variable anónima</div>
+        <pre><span class="pred">inFraganti</span>(<span class="var">Delito</span>, <span class="var">Del</span>) :-
+    <span class="pred">cometio</span>(<span class="var">Delito</span>, <span class="var">Del</span>),
+    <span class="pred">testigo</span>(<span class="var">Delito</span>, <span class="kw">_</span>).</pre>
+      </div>
+    </div>
+    <p>Lo mismo aplica para verificar ausencia: en vez de <code>findall + length(..., 0)</code>, usar <code>not(padre(Persona, _))</code>.</p>
+
+    <!-- SMELL 4 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">④ Keep it simple — hijo único</h4>
+    <p>Verificar que alguien sea hijo único no requiere contar con una lista.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Contar la lista de hijos</div>
+        <pre><span class="pred">hijoUnico</span>(<span class="var">Persona</span>) :-
+    <span class="pred">padre</span>(<span class="var">Padre</span>, <span class="var">Persona</span>),
+    <span class="pred">findall</span>(<span class="var">H</span>,<span class="pred">padre</span>(<span class="var">Padre</span>,<span class="var">H</span>),<span class="var">Hs</span>),
+    <span class="pred">length</span>(<span class="var">Hs</span>, <span class="num">1</span>).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ No existe otro hijo distinto</div>
+        <pre><span class="pred">hijoUnico</span>(<span class="var">Persona</span>) :-
+    <span class="pred">padre</span>(<span class="var">Padre</span>, <span class="var">Persona</span>),
+    <span class="kw">not</span>((<span class="pred">padre</span>(<span class="var">Padre</span>, <span class="var">P2</span>),
+         <span class="var">Persona</span> <span class="op">\=</span> <span class="var">P2</span>)).</pre>
+      </div>
+    </div>
+
+    <!-- SMELL 5 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">⑤ findall + member — lista innecesaria</h4>
+    <p>Si armás una lista con <code>findall</code> y enseguida la recorrés con <code>member</code>, las dos operaciones se cancelan. Es un anti-patrón clásico.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ findall luego member (lista inútil)</div>
+        <pre><span class="pred">estaComplicado</span>(<span class="var">P</span>) :-
+    <span class="pred">findall</span>(<span class="var">H</span>,
+      (<span class="pred">padre</span>(<span class="var">P</span>,<span class="var">H</span>),
+       <span class="pred">edad</span>(<span class="var">H</span>,<span class="var">E</span>), <span class="var">E</span><<span class="num">18</span>), <span class="var">Hs</span>),
+    <span class="pred">member</span>(<span class="var">Hijo</span>, <span class="var">Hs</span>),
+    <span class="pred">problematico</span>(<span class="var">Hijo</span>).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Consulta directa</div>
+        <pre><span class="pred">estaComplicado</span>(<span class="var">P</span>) :-
+    <span class="pred">padre</span>(<span class="var">P</span>, <span class="var">Hijo</span>),
+    <span class="pred">edad</span>(<span class="var">Hijo</span>, <span class="var">Edad</span>),
+    <span class="var">Edad</span> < <span class="num">18</span>,
+    <span class="pred">problematico</span>(<span class="var">Hijo</span>).</pre>
+      </div>
+    </div>
+
+    <!-- SMELL 6 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">⑥ findall + forall(member, …) — lista innecesaria</h4>
+    <p>Armar una lista para después iterar sobre ella con forall es redundante: directamente se puede usar el predicado generador dentro del forall.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Generar lista y luego forall</div>
+        <pre><span class="pred">feliz</span>(<span class="var">G</span>) :-
+    <span class="pred">gobernante</span>(<span class="var">G</span>),
+    <span class="pred">findall</span>(<span class="var">D</span>,<span class="pred">diario</span>(<span class="var">D</span>),<span class="var">Ds</span>),
+    <span class="pred">forall</span>(<span class="pred">member</span>(<span class="var">D</span>,<span class="var">Ds</span>),
+           <span class="pred">oficialista</span>(<span class="var">D</span>,<span class="var">G</span>)).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ forall directo sobre el generador</div>
+        <pre><span class="pred">feliz</span>(<span class="var">G</span>) :-
+    <span class="pred">gobernante</span>(<span class="var">G</span>),
+    <span class="pred">forall</span>(<span class="pred">diario</span>(<span class="var">D</span>),
+           <span class="pred">oficialista</span>(<span class="var">D</span>,<span class="var">G</span>)).</pre>
+      </div>
+    </div>
+    <div class="callout callout-tip">
+      <strong>Excepción legítima</strong>
+      <code>forall(member(X, A), member(X, B))</code> es correcto dentro de <code>incluido/2</code> porque el dominio <em>ya es</em> una lista — no la estamos generando.
+    </div>
+
+    <!-- SMELL 7 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">⑦ Lazy predicate (predicado sin valor)</h4>
+    <p>Un predicado que solo llama a otro con los mismos argumentos no agrega valor.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Delegación vacía</div>
+        <pre><span class="pred">estaComplicado</span>(<span class="var">P</span>) :-
+    <span class="pred">personaComplicada</span>(<span class="var">P</span>).
+
+<span class="pred">personaComplicada</span>(<span class="var">P</span>) :-
+    <span class="cmt">% lógica real acá…</span></pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Predicado único con responsabilidad propia</div>
+        <pre><span class="pred">estaComplicado</span>(<span class="var">P</span>) :-
+    <span class="pred">padre</span>(<span class="var">P</span>, <span class="var">Hijo</span>),
+    <span class="pred">edad</span>(<span class="var">Hijo</span>, <span class="var">E</span>), <span class="var">E</span> < <span class="num">18</span>,
+    <span class="pred">problematico</span>(<span class="var">Hijo</span>).</pre>
+      </div>
+    </div>
+
+    <!-- SMELL 8 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">⑧ Inversibilidad faltante</h4>
+    <p>Un predicado con <code>forall</code> que no tiene predicado generador no es inversible.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Sin generador (no inversible)</div>
+        <pre><span class="pred">viejoMaestro</span>(<span class="var">P</span>) :-
+    <span class="pred">forall</span>(<span class="pred">pensamiento</span>(<span class="var">P</span>,<span class="var">X</span>),
+           <span class="pred">llegaANuestrosDias</span>(<span class="var">X</span>)).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Con generador (inversible)</div>
+        <pre><span class="pred">viejoMaestro</span>(<span class="var">P</span>) :-
+    <span class="pred">pensador</span>(<span class="var">P</span>),
+    <span class="pred">forall</span>(<span class="pred">pensamiento</span>(<span class="var">P</span>,<span class="var">X</span>),
+           <span class="pred">llegaANuestrosDias</span>(<span class="var">X</span>)).</pre>
+      </div>
+    </div>
+
+    <!-- SMELL 9 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">⑨ Incógnitas innecesarias</h4>
+    <p>No uses una variable si el valor ya es conocido y constante.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Variable local innecesaria</div>
+        <pre><span class="pred">numeroDeLaSuerte</span>(<span class="atom">joaquin</span>, <span class="var">N</span>) :-
+    <span class="var">N</span> <span class="kw">is</span> <span class="num">8</span>.</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Hecho directo</div>
+        <pre><span class="pred">numeroDeLaSuerte</span>(<span class="atom">joaquin</span>, <span class="num">8</span>).</pre>
+      </div>
+    </div>
+
+    <!-- SMELL 10 -->
+    <h4 style="margin:1.75rem 0 .75rem; color:var(--accent4); font-size:.95rem; font-family:'JetBrains Mono',monospace;">⑩ Expresividad y parametrización</h4>
+    <p>Nombres poco descriptivos y predicados con condiciones hardcodeadas dificultan la lectura y el mantenimiento.</p>
+    <div class="compare">
+      <div class="compare-col bad">
+        <div class="compare-head">❌ Condiciones explícitas y hardcoded</div>
+        <pre><span class="pred">puedeComer</span>(<span class="atom">analia</span>, <span class="var">Comida</span>) :-
+    <span class="pred">ingrediente</span>(<span class="var">Comida</span>, <span class="kw">_</span>),
+    <span class="pred">forall</span>(<span class="pred">ingrediente</span>(<span class="var">Comida</span>, <span class="var">I</span>),
+      (<span class="kw">not</span>(<span class="pred">contieneCarne</span>(<span class="var">I</span>)),
+       <span class="kw">not</span>(<span class="pred">contieneHuevo</span>(<span class="var">I</span>)),
+       <span class="kw">not</span>(<span class="pred">contieneLeche</span>(<span class="var">I</span>)))).</pre>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head">✅ Parametrizado y expresivo</div>
+        <pre><span class="pred">puedeComer</span>(<span class="atom">analia</span>, <span class="var">Comida</span>) :-
+    <span class="pred">comida</span>(<span class="var">Comida</span>),
+    <span class="pred">forall</span>(<span class="pred">ingrediente</span>(<span class="var">Comida</span>,<span class="var">I</span>),
+           <span class="pred">aptoParaVegano</span>(<span class="var">I</span>)).
+
+<span class="pred">aptoParaVegano</span>(<span class="var">I</span>) :-
+    <span class="kw">not</span>((<span class="pred">indeseadoVegano</span>(<span class="var">E</span>),
+         <span class="pred">contiene</span>(<span class="var">I</span>, <span class="var">E</span>))).
+
+<span class="pred">indeseadoVegano</span>(<span class="atom">carne</span>).
+<span class="pred">indeseadoVegano</span>(<span class="atom">huevo</span>).
+<span class="pred">indeseadoVegano</span>(<span class="atom">leche</span>).</pre>
+      </div>
+    </div>
+    <p>Al agregar un nuevo elemento indeseable para veganos (ej: miel), solo se agrega un hecho. El predicado <code>puedeComer/2</code> no cambia.</p>
+
+    <!-- TARJETA RESUMEN CODE SMELLS -->
+    <div class="smell-grid" style="margin-top:2rem;">
+      <div class="smell-card"><div class="smell-num">Smell 1</div><h4>Negación vs. Aserción</h4><p>Reemplazar doble negación por <code>forall/2</code>.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 2</div><h4>Evitar duplicidades</h4><p>Unificar lógica similar con predicados polimórficos.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 3</div><h4>Keep it simple – existencia</h4><p>No usar <code>findall+length>0</code>; usar existencia directa.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 4</div><h4>Keep it simple – unicidad</h4><p>No contar listas para verificar unicidad; usar <code>not</code>.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 5</div><h4>findall + member</h4><p>Operaciones inversas que se anulan. Consultar directo.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 6</div><h4>findall + forall(member)</h4><p>La lista es innecesaria; usar el generador en forall.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 7</div><h4>Lazy predicate</h4><p>Predicado que solo llama a otro sin agregar nada.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 8</div><h4>Inversibilidad faltante</h4><p>Agregar predicado generador antes del forall.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 9</div><h4>Incógnitas innecesarias</h4><p>Usar hechos directos para valores constantes.</p></div>
+      <div class="smell-card"><div class="smell-num">Smell 10</div><h4>Expresividad & parametrización</h4><p>Nombres descriptivos y condiciones extensibles.</p></div>
+    </div>
+  </section>
+
+  <!-- RESUMEN FINAL -->
+  <section id="resumen">
+    <h3><span class="tag tag-concept">Resumen</span> Conceptos clave — Módulos 5 y 6</h3>
+
+    <div class="summary-box">
+      <h4>Módulo 5 · Recursividad</h4>
+      <ul>
+        <li>Un predicado recursivo se define en términos de sí mismo.</li>
+        <li>Necesita caso base (corte) y caso recursivo.</li>
+        <li>Permite encontrar múltiples soluciones a diferentes niveles de profundidad.</li>
+        <li><code>member(X, [X|_]).</code> + <code>member(X, [_|Z]):-member(X,Z).</code> — inversible en primer argumento.</li>
+        <li><code>nth1/3</code> — posición N (desde 1) en una lista; inversible en todos sus argumentos.</li>
+        <li>La lista vacía no tiene caso porque viola el principio de universo cerrado.</li>
+      </ul>
+    </div>
+
+    <div class="summary-box" style="margin-top:1rem;">
+      <h4>Módulo 6 · Diseño</h4>
+      <ul>
+        <li>Diseño = componentes + responsabilidades + relaciones.</li>
+        <li>En Prolog: componentes son predicados e individuos (átomos, functores, números).</li>
+        <li>Functor ≠ predicado: un functor es una estructura de datos; un predicado define relaciones.</li>
+        <li>Acoplamiento necesario = dos componentes se conocen para resolver un requerimiento.</li>
+        <li>Buen acoplamiento: cambiar la implementación de un predicado no obliga a cambiar sus clientes.</li>
+        <li>10 code smells: negación, duplicidad, over-engineering con listas, predicados vacíos, falta de inversibilidad, incógnitas, expresividad, hardcoding.</li>
+        <li>El antídoto general: pensar declarativamente, no algorítmicamente.</li>
+      </ul>
+    </div>
+  </section>
+
+</div><!-- /wrapper -->
+
+<footer>
+  Paradigma Lógico · Módulos 5 y 6 · Dodino, Lombardi, Passerini et al. — Guía de estudio generada con Claude
+</footer>
+
+</body>
+</html>
