@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paradigma Lógico — Prolog</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #11161d;
+    --line: #1f2731;
+    --text: #c9d1d9;
+    --muted: #6e7681;
+    --accent: #7ee787;
+    --accent-dim: #2ea043;
+    --amber: #d29922;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Consolas', 'Menlo', 'Courier New', monospace;
+    line-height: 1.6;
+    padding: 0 1.5rem;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 0 5rem;
+  }
+
+  .prompt {
+    color: var(--accent-dim);
+  }
+
+  .banner {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    padding: 1.5rem 1.75rem;
+    border-radius: 6px;
+    margin-bottom: 3rem;
+  }
+
+  .banner .line {
+    white-space: pre;
+    color: var(--muted);
+  }
+
+  .banner .line strong {
+    color: var(--accent);
+    font-weight: normal;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    font-weight: normal;
+    color: var(--text);
+    margin: 0 0 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  h1 .dot { color: var(--accent); }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0 0 2.5rem;
+  }
+
+  section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-label {
+    color: var(--amber);
+    font-size: 0.85rem;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .section-label::before {
+    content: "?-";
+    color: var(--accent-dim);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  li:last-child { border-bottom: none; }
+
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.12s ease, padding-left 0.12s ease;
+  }
+
+  a:hover {
+    background: var(--panel);
+    padding-left: 1.4rem;
+  }
+
+  a:hover .arrow { opacity: 1; transform: translateX(0); }
+
+  .item-name {
+    color: var(--accent);
+  }
+
+  .item-desc {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-left: 0.75rem;
+  }
+
+  .arrow {
+    color: var(--accent-dim);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: inherit;
+    flex-shrink: 0;
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  footer a {
+    display: inline;
+    padding: 0;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  footer a:hover {
+    background: none;
+    padding-left: 0;
+    color: var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 2.5rem 0 3rem; }
+    .item-desc { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner">
+    <div class="line">?- <strong>aprender</strong>(paradigmaLogico, prolog).</div>
+    <div class="line">true.</div>
+  </div>
+
+  <h1>Paradigmas de Programación <span class="dot">·</span> Prolog</h1>
+  <p class="subtitle">Resolución de ejercicios de la cátedra en SWI-Prolog</p>
+
+  <section>
+    <div class="section-label">material_teorico(Guia, Tema)</div>
+    <ul>
+      <li>
+        <a href="MaterialTeorico/guia_modulos1y2.html">
+          <span><span class="item-name">guía 01</span><span class="item-desc">predicados, individuos, consultas, reglas</span></span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="MaterialTeorico/guia-modulos-3-4.html">
+          <span><span class="item-name">guía 02</span><span class="item-desc">pattern matching, listas, functores</span></span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="MaterialTeorico/modulo7_explosion_combinatoria.html">
+          <span><span class="item-name">guía 03</span><span class="item-desc">explosión combinatoria</span></span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Materia: Paradigmas de Programación</span>
+    <a href="https://github.com/SaraLuceroCarballo/Paradigma_Logico_Practica">ver repositorio en GitHub</a>
+  </footer>
+
+</div>
+</body>
+</html>
