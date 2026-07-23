@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paradigma Lógico — Módulos 3 y 4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --bg:       #0e0f14;
+    --surface:  #161820;
+    --card:     #1c1e27;
+    --border:   #2a2d3a;
+    --accent:   #7c6af7;   /* violet — logic/mind */
+    --accent2:  #3ecfb2;   /* teal  — data/facts  */
+    --accent3:  #f5a623;   /* amber — warnings/notes */
+    --text:     #e4e6f0;
+    --muted:    #6b6f85;
+    --code-bg:  #12131a;
+    --true:     #3ecfb2;
+    --false:    #f55f5f;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #13102b 0%, #0e1420 60%, #0a1a18 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 50%, rgba(124,106,247,.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 70% 50%, rgba(62,207,178,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: .75rem;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+    font-size: 14px;
+  }
+
+  /* ── NAV PILLS ── */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .5rem;
+    padding: 1.25rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .3rem .75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    transition: all .2s;
+  }
+  nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  /* ── MODULE BADGE ── */
+  .module-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .3rem .9rem;
+    border-radius: 999px;
+    margin-bottom: 1.5rem;
+  }
+  .badge-m3 { background: rgba(124,106,247,.12); color: var(--accent); border: 1px solid rgba(124,106,247,.3); }
+  .badge-m4 { background: rgba(62,207,178,.12);  color: var(--accent2); border: 1px solid rgba(62,207,178,.3); }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #fff;
+    margin-bottom: .4rem;
+    padding-top: 2.5rem;
+  }
+  .section-title + .sub { color: var(--muted); font-size: 13px; margin-bottom: 1.75rem; }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin: 2rem 0 .6rem;
+  }
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .85rem;
+    color: var(--accent2);
+    margin: 1.5rem 0 .5rem;
+    letter-spacing: .05em;
+  }
+
+  p { margin-bottom: .9rem; color: #c8cadc; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 3rem 0;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    margin: 1rem 0 1.25rem;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-block.teal { border-left-color: var(--accent2); }
+  .code-block.amber { border-left-color: var(--accent3); }
+  .code-block pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #d0d4ef;
+    white-space: pre;
+  }
+  .code-block .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .5rem;
+  }
+  /* Syntax colors */
+  .kw  { color: #7c6af7; }   /* keyword / predicate name */
+  .var { color: #f5a623; }   /* variable */
+  .str { color: #3ecfb2; }   /* string / atom */
+  .num { color: #f55f5f; }   /* number */
+  .cmt { color: #444b66; font-style: italic; } /* comment */
+  .op  { color: #b0b8e0; }   /* operator */
+  .tr  { color: #3ecfb2; font-weight: 700; }   /* true */
+  .fa  { color: #f55f5f; font-weight: 700; }   /* false */
+
+  /* ── CONCEPT CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    margin: 1rem 0 1.25rem;
+  }
+  .card .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: .95rem;
+    color: #fff;
+    margin-bottom: .5rem;
+  }
+  .card p { margin-bottom: 0; font-size: 14px; }
+
+  /* ── ALERT ── */
+  .alert {
+    display: flex;
+    gap: .8rem;
+    border-radius: 6px;
+    padding: .85rem 1.1rem;
+    margin: 1rem 0 1.25rem;
+    font-size: 14px;
+  }
+  .alert-icon { flex-shrink: 0; font-size: 1rem; line-height: 1.75; }
+  .alert.warning { background: rgba(245,166,35,.08); border: 1px solid rgba(245,166,35,.25); color: #e0c48a; }
+  .alert.info    { background: rgba(124,106,247,.08); border: 1px solid rgba(124,106,247,.25); color: #b0a8f0; }
+  .alert.success { background: rgba(62,207,178,.08);  border: 1px solid rgba(62,207,178,.25);  color: #7de8d4; }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 1rem 0 1.25rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th {
+    background: var(--surface);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .65rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid rgba(42,45,58,.5); }
+  tbody tr:hover { background: rgba(255,255,255,.02); }
+  td { padding: .6rem 1rem; color: #c4c7dc; vertical-align: top; }
+  td code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    background: rgba(124,106,247,.08);
+    padding: .1rem .35rem;
+    border-radius: 3px;
+  }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent2);
+    background: rgba(62,207,178,.07);
+    padding: .1rem .35rem;
+    border-radius: 3px;
+  }
+
+  /* ── QUERY PAIR ── */
+  .qpair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: .75rem 0; }
+  @media (max-width: 560px) { .qpair { grid-template-columns: 1fr; } }
+  .qpair .qbox {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .8rem 1rem;
+  }
+  .qpair .qbox .ql { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #d0d4ef; }
+  .qpair .qbox .res { font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-top: .3rem; }
+  .qpair .qbox .res.t { color: var(--true); }
+  .qpair .qbox .res.f { color: var(--false); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Guía de estudio · Paradigma Lógico</div>
+  <h1>Módulos <span>3</span> y <span>4</span></h1>
+  <p>Estructuras de datos, individuos simples y compuestos, y predicados de orden superior en Prolog.</p>
+</header>
+
+<nav>
+  <a href="#m3-simples">Individuos simples</a>
+  <a href="#m3-pm">Pattern matching</a>
+  <a href="#m3-listas">Listas</a>
+  <a href="#m3-functores">Functores</a>
+  <a href="#m4-not">not/1</a>
+  <a href="#m4-forall">forall/2</a>
+  <a href="#m4-findall">findall/3</a>
+  <a href="#m4-resumen">Resumen</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     MÓDULO 3
+══════════════════════════════════════════ -->
+
+<div class="module-badge badge-m3">● Módulo 3 — Estructuras de datos</div>
+
+<p>En Prolog toda la información que modelamos existe como <strong>individuos</strong>. Estos pueden ser <em>simples</em> (atómicos, indivisibles) o <em>compuestos</em> (agrupan varios individuos). Comprender esta distinción es la base para escribir predicados expresivos y correctos.</p>
+
+<!-- ── Individuos simples ── -->
+<div class="section-title" id="m3-simples">Individuos simples</div>
+<p class="sub">Átomos que no se pueden descomponer en partes.</p>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Átomos / identificadores</div>
+    <p>Identificadores que empiezan con minúscula: <code>juan</code>, <code>ravioles</code>, <code>pilar</code>. Se comparan con <code>=</code> y <code>\=</code>.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Números</div>
+    <p>Enteros y decimales como literales: <code>8</code>, <code>3.14</code>. Soportan operadores aritméticos y comparaciones de orden.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Strings</div>
+    <p>Cadenas con espacios entre comillas dobles: <code>"Jorge Luis Borges"</code>. Útiles para representar nombres compuestos como un solo individuo.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Variables</div>
+    <p>Empiezan con mayúscula o <code>_</code>: <code>Valor</code>, <code>X</code>, <code>_</code>. No son individuos pero actúan como incógnitas en los predicados.</p>
+  </div>
+</div>
+
+<h3>Aritmética: el operador <code>is/2</code></h3>
+<p>En Prolog, <code>=</code> es <strong>unificación estructural</strong>, no evaluación numérica. La expresión <code>2 + 3</code> no se reduce automáticamente a <code>5</code>: son estructuras distintas.</p>
+
+<div class="code-block">
+  <div class="label">Consultas de ejemplo</div>
+  <pre><span class="cmt">% Unificación estructural (NO aritmética)</span>
+<span class="op">?-</span> <span class="num">5</span> <span class="op">=</span> <span class="num">2</span> <span class="op">+</span> <span class="num">3</span>.    <span class="fa">false</span>   <span class="cmt">% el número 5 ≠ la expresión 2+3</span>
+<span class="op">?-</span> <span class="num">2</span> <span class="op">+</span> <span class="num">3</span> <span class="op">=</span> <span class="num">3</span> <span class="op">+</span> <span class="num">2</span>.  <span class="fa">false</span>   <span class="cmt">% estructuras diferentes</span>
+<span class="op">?-</span> <span class="num">2</span> <span class="op">+</span> <span class="num">3</span> <span class="op">=</span> <span class="num">2</span> <span class="op">+</span> <span class="num">3</span>.  <span class="tr">true</span>
+
+<span class="cmt">% is/2 evalúa el lado derecho y unifica con el izquierdo</span>
+<span class="op">?-</span> <span class="num">4</span> <span class="kw">is</span> <span class="num">2</span> <span class="op">*</span> <span class="num">2</span>.      <span class="tr">true</span>
+<span class="op">?-</span> <span class="var">Z</span> <span class="kw">is</span> <span class="num">2</span> <span class="op">*</span> <span class="num">2</span>.      <span class="var">Z</span> <span class="op">=</span> <span class="num">4</span>
+
+<span class="cmt">% Variable sin ligar en el lado derecho → ERROR</span>
+<span class="op">?-</span> <span class="num">5</span> <span class="kw">is</span> <span class="var">N</span> <span class="op">+</span> <span class="num">2</span>.     <span class="fa">ERROR: not sufficiently instantiated</span></pre>
+</div>
+
+<div class="alert warning">
+  <span class="alert-icon">⚠</span>
+  <span><strong>Restricciones de inversibilidad:</strong> los operadores <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>=&lt;</code>, las operaciones aritméticas (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) y el operador <code>is/2</code> requieren que sus argumentos estén instanciados. No se puede dejar una variable libre en la parte derecha de <code>is/2</code>.</span>
+</div>
+
+<div class="code-block teal">
+  <div class="label">Predicado siguiente/2</div>
+  <pre><span class="cmt">% INCORRECTO: Siguiente = Valor + 1 no evalúa</span>
+<span class="kw">siguiente</span>(<span class="var">Valor</span>, <span class="var">Siguiente</span>):- <span class="var">Siguiente</span> <span class="op">=</span> <span class="var">Valor</span> <span class="op">+</span> <span class="num">1</span>. <span class="cmt">% ✗</span>
+
+<span class="cmt">% CORRECTO: is/2 evalúa la expresión</span>
+<span class="kw">siguiente</span>(<span class="var">Valor</span>, <span class="var">Siguiente</span>):- <span class="var">Siguiente</span> <span class="kw">is</span> <span class="var">Valor</span> <span class="op">+</span> <span class="num">1</span>. <span class="cmt">% ✓</span>
+
+<span class="op">?-</span> <span class="kw">siguiente</span>(<span class="num">4</span>, <span class="var">N</span>).  <span class="var">N</span> <span class="op">=</span> <span class="num">5</span>
+<span class="op">?-</span> <span class="kw">siguiente</span>(<span class="num">2</span>, <span class="num">3</span>). <span class="tr">true</span></pre>
+</div>
+
+<!-- ── Pattern Matching ── -->
+<div class="section-title" id="m3-pm">Pattern Matching</div>
+<p class="sub">Búsqueda por patrones en el paradigma lógico.</p>
+
+<p>El pattern matching en Prolog funciona de forma diferente al paradigma funcional (Haskell). En Haskell, una función devuelve la <em>primera</em> cláusula que coincide (unicidad). En Prolog, el motor <strong>prueba todas las cláusulas posibles</strong> y devuelve todos los individuos que satisfacen la relación.</p>
+
+<div class="code-block">
+  <div class="label">Comparación funcional vs. lógico</div>
+  <pre><span class="cmt">-- Haskell: devuelve SOLO la primera coincidencia</span>
+valor 0 = 1
+valor numero = numero
+
+<span class="cmt">% Prolog: explora TODAS las cláusulas</span>
+<span class="kw">valor</span>(<span class="num">0</span>, <span class="num">1</span>).
+<span class="kw">valor</span>(<span class="var">Incognita</span>, <span class="var">Incognita</span>).
+
+<span class="op">?-</span> <span class="kw">valor</span>(<span class="num">0</span>, <span class="var">Cual</span>).
+<span class="var">Cual</span> <span class="op">=</span> <span class="num">1</span> <span class="cmt">; % unifica con la primera cláusula</span>
+<span class="var">Cual</span> <span class="op">=</span> <span class="num">0</span> <span class="cmt">; % también unifica con la segunda (Incognita=0)</span></pre>
+</div>
+
+<div class="alert info">
+  <span class="alert-icon">ℹ</span>
+  <span>Prolog no tiene chequeo de tipos. Una variable sin ligar (<code>Incognita</code>) puede unificar con cualquier individuo: un número, un string, un átomo, una lista, un functor, etc.</span>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── Listas ── -->
+<div class="section-title" id="m3-listas">Individuos compuestos — Listas</div>
+<p class="sub">Serie ordenada de elementos que pueden repetirse.</p>
+
+<p>Las listas son la primera estructura de datos compuesta de Prolog. Son <strong>recursivas</strong>: una lista es o bien la lista vacía <code>[]</code>, o bien un elemento (cabeza) seguido de otra lista (cola).</p>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Notación</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><code>[]</code></td><td>Lista vacía, caso base.</td><td></td></tr>
+      <tr><td><code>[a]</code></td><td>Lista con un solo elemento.</td><td><code>[borges]</code></td></tr>
+      <tr><td><code>[a, b, c]</code></td><td>Lista con múltiples elementos.</td><td><code>[1, 4, 9, 10]</code></td></tr>
+      <tr><td><code>[H|T]</code></td><td>Cabeza <code>H</code> y cola <code>T</code>. Patrón recursivo.</td><td><code>[1|[4,9,10]]</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Pattern matching con listas</h3>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Patrón</th><th>Coincide con</th><th>No coincide con</th></tr></thead>
+    <tbody>
+      <tr><td><code>[]</code></td><td>Lista vacía solamente.</td><td>Cualquier lista con elementos.</td></tr>
+      <tr><td><code>[E]</code></td><td>Lista de exactamente un elemento.</td><td><code>[]</code> o <code>[a,b]</code>.</td></tr>
+      <tr><td><code>[H|T]</code></td><td>Lista con al menos un elemento.</td><td><code>[]</code>.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="code-block">
+  <div class="label">Predicado head/2 con pattern matching</div>
+  <pre><span class="cmt">% El _ ignora la cola (no nos importa)</span>
+<span class="kw">head</span>([<span class="var">Cabeza</span> | <span class="op">_</span>], <span class="var">Cabeza</span>).
+
+<span class="op">?-</span> <span class="kw">head</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>], <span class="var">X</span>).  <span class="var">X</span> <span class="op">=</span> <span class="num">1</span>
+<span class="op">?-</span> <span class="kw">head</span>([<span class="str">borges</span>], <span class="var">X</span>).   <span class="var">X</span> <span class="op">=</span> <span class="str">borges</span></pre>
+</div>
+
+<h3>Predicados built-in para listas</h3>
+
+<!-- length -->
+<h4>length/2 — longitud</h4>
+<p>Relaciona una lista con su longitud. Es inversible: puede recibir la lista o el número como incógnita.</p>
+<div class="code-block">
+<pre><span class="op">?-</span> <span class="kw">length</span>([<span class="str">picasso</span>, <span class="str">dali</span>], <span class="var">N</span>).    <span class="var">N</span> <span class="op">=</span> <span class="num">2</span>
+<span class="op">?-</span> <span class="kw">length</span>([<span class="str">picasso</span>, <span class="str">dali</span>], <span class="num">2</span>).    <span class="tr">true</span>
+<span class="op">?-</span> <span class="kw">length</span>(<span class="var">Lista</span>, <span class="num">3</span>).              <span class="cmt">% genera listas de longitud 3</span></pre>
+</div>
+
+<!-- member -->
+<h4>member/2 — pertenencia</h4>
+<p>Verifica si un elemento pertenece a una lista. Inversible en el primer argumento (permite enumerar elementos). Si la lista es incógnita, pierde sentido.</p>
+<div class="code-block">
+<pre><span class="op">?-</span> <span class="kw">member</span>(<span class="num">5</span>, [<span class="num">5</span>, <span class="num">8</span>]).          <span class="tr">true</span>
+<span class="op">?-</span> <span class="kw">member</span>(<span class="num">4</span>, [<span class="num">5</span>, <span class="num">8</span>]).          <span class="fa">false</span>
+<span class="op">?-</span> <span class="kw">member</span>(<span class="var">X</span>, [<span class="num">5</span>, <span class="num">8</span>]).           <span class="var">X</span> <span class="op">=</span> <span class="num">5</span> ; <span class="var">X</span> <span class="op">=</span> <span class="num">8</span></pre>
+</div>
+
+<!-- append -->
+<h4>append/3 — concatenación</h4>
+<p>Relaciona dos listas con su concatenación. Es <strong>muy inversible</strong>: cualquiera de sus tres argumentos puede ser incógnita.</p>
+<div class="code-block">
+<pre><span class="op">?-</span> <span class="kw">append</span>([<span class="num">1</span>,<span class="num">3</span>], [<span class="num">2</span>], <span class="var">R</span>).              <span class="var">R</span> <span class="op">=</span> [<span class="num">1</span>,<span class="num">3</span>,<span class="num">2</span>]
+<span class="op">?-</span> <span class="kw">append</span>([<span class="num">1</span>,<span class="num">3</span>], <span class="var">S</span>, [<span class="num">1</span>,<span class="num">3</span>,<span class="str">borges</span>]).    <span class="var">S</span> <span class="op">=</span> [<span class="str">borges</span>]
+<span class="op">?-</span> <span class="kw">append</span>(<span class="var">X</span>, <span class="var">Y</span>, [<span class="num">1</span>,<span class="num">2</span>]).              <span class="cmt">% da 3 soluciones posibles</span></pre>
+</div>
+
+<!-- nth -->
+<h4>nth0/3 y nth1/3 — elemento por posición</h4>
+<p><code>nth0</code> usa índice base 0; <code>nth1</code> usa índice base 1. Ambos son inversibles en la posición.</p>
+<div class="code-block">
+<pre><span class="op">?-</span> <span class="kw">nth0</span>(<span class="num">2</span>, [<span class="str">borges</span>,<span class="str">cortazar</span>,<span class="str">bioy</span>], <span class="var">E</span>). <span class="var">E</span> <span class="op">=</span> <span class="str">bioy</span>
+<span class="op">?-</span> <span class="kw">nth1</span>(<span class="num">2</span>, [<span class="str">borges</span>,<span class="str">cortazar</span>,<span class="str">bioy</span>], <span class="var">E</span>). <span class="var">E</span> <span class="op">=</span> <span class="str">cortazar</span>
+<span class="op">?-</span> <span class="kw">nth0</span>(<span class="var">P</span>, [<span class="str">borges</span>,<span class="str">cortazar</span>,<span class="str">bioy</span>], <span class="str">cortazar</span>). <span class="var">P</span> <span class="op">=</span> <span class="num">1</span></pre>
+</div>
+
+<!-- otros -->
+<h4>Otros predicados útiles</h4>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Predicado</th><th>Qué hace</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><code>last/2</code></td><td>Relaciona lista con su último elemento.</td><td><code>last([1,2,3], X)</code> → <code>X=3</code></td></tr>
+      <tr><td><code>reverse/2</code></td><td>Verifica/genera el reverso de una lista.</td><td><code>reverse([1,2,3], X)</code> → <code>X=[3,2,1]</code></td></tr>
+      <tr><td><code>sum_list/2</code></td><td>Suma los números de una lista.</td><td><code>sum_list([7,2,6], T)</code> → <code>T=15</code></td></tr>
+      <tr><td><code>list_to_set/2</code></td><td>Elimina duplicados de una lista.</td><td><code>list_to_set([2,3,2], S)</code> → <code>S=[2,3]</code></td></tr>
+      <tr><td><code>max_member/2</code></td><td>El mayor elemento de una lista.</td><td><code>max_member(M, [3,1,5])</code> → <code>M=5</code></td></tr>
+      <tr><td><code>subset/2</code></td><td>Verifica si A es subconjunto de B.</td><td><code>subset([1,2],[1,2,3])</code> → <code>true</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── Functores ── -->
+<div class="section-title" id="m3-functores">Functores</div>
+<p class="sub">Individuos compuestos con nombre y aridad.</p>
+
+<p>Un <strong>functor</strong> permite agrupar información heterogénea relacionada bajo un nombre. Se parece sintácticamente a un predicado, pero <em>no tiene valor de verdad</em>: no se puede consultar <code>?- fecha(22, 08, 1979).</code>, sino que se usa como argumento dentro de un predicado.</p>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Predicado</div>
+    <p>Define una relación. Tiene valor de verdad (true/false). Ejemplo: <code>nacio(karla, ...)</code></p>
+  </div>
+  <div class="card">
+    <div class="card-title">Functor</div>
+    <p>Es un individuo compuesto. No tiene valor de verdad. Ejemplo: <code>fecha(22, 08, 1979)</code></p>
+  </div>
+</div>
+
+<div class="code-block teal">
+  <div class="label">Uso de functores</div>
+  <pre><span class="cmt">% fecha/3 es un functor (individuo compuesto)</span>
+<span class="kw">nacio</span>(<span class="str">karla</span>, <span class="kw">fecha</span>(<span class="num">22</span>, <span class="num">08</span>, <span class="num">1979</span>)).
+<span class="kw">nacio</span>(<span class="str">sergio</span>, <span class="kw">fecha</span>(<span class="num">14</span>, <span class="num">10</span>, <span class="num">1986</span>)).
+
+<span class="cmt">% Pattern matching dentro del functor</span>
+<span class="op">?-</span> <span class="kw">nacio</span>(<span class="var">Quien</span>, <span class="kw">fecha</span>(<span class="op">_</span>, <span class="op">_</span>, <span class="num">1986</span>)).
+<span class="var">Quien</span> <span class="op">=</span> <span class="str">sergio</span>
+
+<span class="op">?-</span> <span class="kw">nacio</span>(<span class="op">_</span>, <span class="kw">fecha</span>(<span class="op">_</span>, <span class="op">_</span>, <span class="var">Anio</span>)).
+<span class="var">Anio</span> <span class="op">=</span> <span class="num">1979</span> ; <span class="var">Anio</span> <span class="op">=</span> <span class="num">1986</span>
+
+<span class="cmt">% No se puede usar una variable como nombre de functor</span>
+<span class="op">?-</span> <span class="kw">nacio</span>(<span class="op">_</span>, <span class="var">Functor</span>(<span class="op">_</span>, <span class="op">_</span>, <span class="var">Anio</span>)). <span class="cmt">% ✗ ERROR</span></pre>
+</div>
+
+<h3>Ventajas de los functores: polimorfismo</h3>
+<p>Con functores, predicados distintos (natación, fútbol, rugby) pueden ser manejados por el mismo predicado gracias al pattern matching. Si se agrega un nuevo deporte, el predicado principal no necesita modificarse.</p>
+
+<div class="code-block">
+  <div class="label">Ejemplo integrador — deportistas</div>
+  <pre><span class="kw">practica</span>(<span class="str">ana</span>, <span class="kw">natacion</span>([<span class="str">pecho</span>, <span class="str">crawl</span>], <span class="num">1200</span>, <span class="num">10</span>)).
+<span class="kw">practica</span>(<span class="str">deby</span>, <span class="kw">futbol</span>(<span class="num">2</span>, <span class="num">15</span>, <span class="num">5</span>)).
+<span class="kw">practica</span>(<span class="str">zaffa</span>, <span class="kw">rugby</span>(<span class="str">pilar</span>, <span class="num">0</span>)).
+
+<span class="cmt">% Cuántas medallas por pattern matching en el functor</span>
+<span class="kw">cuantasMedallas</span>(<span class="kw">natacion</span>(<span class="op">_</span>, <span class="op">_</span>, <span class="var">M</span>), <span class="var">M</span>).
+<span class="kw">cuantasMedallas</span>(<span class="kw">futbol</span>(<span class="var">M</span>, <span class="op">_</span>, <span class="op">_</span>), <span class="var">M</span>).
+<span class="kw">cuantasMedallas</span>(<span class="kw">rugby</span>(<span class="op">_</span>, <span class="var">M</span>), <span class="var">M</span>).
+
+<span class="kw">medallas</span>(<span class="var">Alguien</span>, <span class="var">M</span>):-
+  <span class="kw">practica</span>(<span class="var">Alguien</span>, <span class="var">Deporte</span>),
+  <span class="kw">cuantasMedallas</span>(<span class="var">Deporte</span>, <span class="var">M</span>).
+
+<span class="cmt">% Extendible: agregar polo no cambia medallas/2</span>
+<span class="kw">practica</span>(<span class="str">gise</span>, <span class="kw">polo</span>(<span class="num">8</span>)).
+<span class="kw">cuantasMedallas</span>(<span class="kw">polo</span>(<span class="op">_</span>), <span class="num">0</span>).</pre>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MÓDULO 4
+══════════════════════════════════════════ -->
+
+<div class="divider"></div>
+
+<div class="module-badge badge-m4">● Módulo 4 — Predicados de orden superior</div>
+
+<p>Los predicados de orden superior son predicados que <strong>reciben otros predicados como argumentos</strong>. Esto permite razonar sobre el universo de soluciones de una consulta: negarlo, cuantificarlo universalmente, o recolectarlo en una lista.</p>
+
+<!-- ── NOT ── -->
+<div class="section-title" id="m4-not">not/1 — negación lógica</div>
+<p class="sub">Cuantificación existencial negativa: "no existe ningún x tal que…"</p>
+
+<p><code>not(P)</code> se satisface cuando el predicado <code>P</code> <strong>falla</strong>. Implementa la Hipótesis del Mundo Cerrado: si algo no se puede probar como verdadero, se asume falso.</p>
+
+<div class="code-block">
+  <div class="label">Ejemplo básico — números yeta en la ruleta</div>
+  <pre><span class="kw">juega</span>(<span class="str">julia</span>, <span class="num">3</span>).  <span class="kw">juega</span>(<span class="str">beto</span>, <span class="num">6</span>).  <span class="kw">juega</span>(<span class="str">dodain</span>, <span class="num">5</span>).
+
+<span class="cmt">% Un número es yeta si nadie apuesta por él</span>
+<span class="kw">yeta</span>(<span class="var">Numero</span>):- <span class="kw">not</span>(<span class="kw">juega</span>(<span class="op">_</span>, <span class="var">Numero</span>)).
+
+<span class="op">?-</span> <span class="kw">yeta</span>(<span class="num">3</span>).   <span class="fa">false</span>  <span class="cmt">% julia juega el 3</span>
+<span class="op">?-</span> <span class="kw">yeta</span>(<span class="num">25</span>).  <span class="tr">true</span>   <span class="cmt">% nadie juega el 25</span>
+<span class="op">?-</span> <span class="kw">yeta</span>(<span class="var">N</span>).   <span class="fa">false</span>  <span class="cmt">% ← no puede enumerar lo que NO existe</span></pre>
+</div>
+
+<h3>Inversibilidad con not/1</h3>
+<p>El problema: <code>not</code> no puede generar el universo de individuos que <em>no</em> cumplen algo, porque Prolog no conoce todos los posibles individuos. La solución es <strong>ligar las variables antes</strong> del <code>not</code>, usando un predicado generador.</p>
+
+<div class="code-block teal">
+  <div class="label">Con predicado generador → inversible</div>
+  <pre><span class="cmt">% between/3 genera los números del 1 al 36</span>
+<span class="kw">numeroRuleta</span>(<span class="var">N</span>):- <span class="kw">between</span>(<span class="num">1</span>, <span class="num">36</span>, <span class="var">N</span>).
+
+<span class="kw">yeta</span>(<span class="var">Numero</span>):-
+  <span class="kw">numeroRuleta</span>(<span class="var">Numero</span>),    <span class="cmt">% liga Numero → generador</span>
+  <span class="kw">not</span>(<span class="kw">juega</span>(<span class="op">_</span>, <span class="var">Numero</span>)).
+
+<span class="op">?-</span> <span class="kw">yeta</span>(<span class="var">N</span>).
+<span class="var">N</span> <span class="op">=</span> <span class="num">1</span> ; <span class="var">N</span> <span class="op">=</span> <span class="num">2</span> ; <span class="var">N</span> <span class="op">=</span> <span class="num">4</span> ; <span class="cmt">... (excluye 3, 5 y 6)</span></pre>
+</div>
+
+<div class="alert warning">
+  <span class="alert-icon">⚠</span>
+  <span><strong>Regla clave de inversibilidad:</strong> para que un predicado que usa <code>not</code> sea inversible, todas las variables dentro del <code>not</code> deben estar ligadas <em>antes</em> de que el motor llegue a él.</span>
+</div>
+
+<h3>Aridad 1: negando conjunciones</h3>
+<p><code>not</code> tiene aridad 1. Para negar dos condiciones a la vez, se usan paréntesis para mantener la aridad.</p>
+<div class="code-block">
+<pre><span class="cmt">% ERROR: not/2 no existe</span>
+<span class="op">?-</span> <span class="kw">not</span>(<span class="num">10</span> <span class="op">></span> <span class="num">3</span>, <span class="kw">juega</span>(<span class="str">dodain</span>, <span class="num">5</span>)).  <span class="cmt">% ✗</span>
+
+<span class="cmt">% CORRECTO: paréntesis internos forman una conjunción</span>
+<span class="op">?-</span> <span class="kw">not</span>((<span class="num">10</span> <span class="op">></span> <span class="num">3</span>, <span class="kw">juega</span>(<span class="str">dodain</span>, <span class="num">5</span>))).  <span class="cmt">% ✓</span></pre>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── FORALL ── -->
+<div class="section-title" id="m4-forall">forall/2 — cuantificación universal</div>
+<p class="sub">"Para todo individuo que cumple P, también cumple Q."</p>
+
+<p><code>forall(Condicion, Conclusion)</code> se satisface si <strong>todos</strong> los individuos que satisfacen <code>Condicion</code> también satisfacen <code>Conclusion</code>. En lógica: ∀x / P(x) ⇒ Q(x).</p>
+
+<div class="code-block">
+  <div class="label">Ejemplo — terminó el año académico</div>
+  <pre><span class="kw">materia</span>(<span class="str">pdp</span>, <span class="num">2</span>).  <span class="kw">materia</span>(<span class="str">proba</span>, <span class="num">2</span>).  <span class="kw">materia</span>(<span class="str">sintaxis</span>, <span class="num">2</span>).
+<span class="kw">nota</span>(<span class="str">nicolas</span>, <span class="str">pdp</span>, <span class="num">10</span>).  <span class="kw">nota</span>(<span class="str">nicolas</span>, <span class="str">proba</span>, <span class="num">7</span>).  <span class="kw">nota</span>(<span class="str">nicolas</span>, <span class="str">sintaxis</span>, <span class="num">8</span>).
+<span class="kw">nota</span>(<span class="str">malena</span>, <span class="str">pdp</span>, <span class="num">6</span>).   <span class="kw">nota</span>(<span class="str">malena</span>, <span class="str">proba</span>, <span class="num">2</span>).
+
+<span class="kw">aprobo</span>(<span class="var">A</span>, <span class="var">M</span>):- <span class="kw">nota</span>(<span class="var">A</span>, <span class="var">M</span>, <span class="var">N</span>), <span class="var">N</span> <span class="op">>=</span> <span class="num">6</span>.
+
+<span class="kw">terminoAnio</span>(<span class="var">Alumno</span>, <span class="var">Anio</span>):-
+  <span class="kw">forall</span>(<span class="kw">materia</span>(<span class="var">Materia</span>, <span class="var">Anio</span>), <span class="kw">aprobo</span>(<span class="var">Alumno</span>, <span class="var">Materia</span>)).
+
+<span class="op">?-</span> <span class="kw">terminoAnio</span>(<span class="str">nicolas</span>, <span class="num">2</span>). <span class="tr">true</span>
+<span class="op">?-</span> <span class="kw">terminoAnio</span>(<span class="str">malena</span>, <span class="num">2</span>).  <span class="fa">false</span></pre>
+</div>
+
+<h3>Inversibilidad con forall/2</h3>
+<p>El <code>forall</code> no liga sus variables: si <code>Alumno</code> llega como incógnita, el motor interpretará "¿todos los alumnos terminaron el año?", que no es lo que queremos. La solución es <strong>ligar con un predicado generador antes</strong> del <code>forall</code>.</p>
+
+<div class="code-block teal">
+  <div class="label">Con generadores para ambos argumentos</div>
+  <pre><span class="cmt">% alumno/1 se deriva por comprensión de nota/3</span>
+<span class="kw">alumno</span>(<span class="var">A</span>):- <span class="kw">nota</span>(<span class="var">A</span>, <span class="op">_</span>, <span class="op">_</span>).
+<span class="kw">anio</span>(<span class="var">A</span>):- <span class="kw">materia</span>(<span class="op">_</span>, <span class="var">A</span>).
+
+<span class="kw">terminoAnio</span>(<span class="var">Alumno</span>, <span class="var">Anio</span>):-
+  <span class="kw">alumno</span>(<span class="var">Alumno</span>),    <span class="cmt">% liga Alumno</span>
+  <span class="kw">anio</span>(<span class="var">Anio</span>),         <span class="cmt">% liga Anio</span>
+  <span class="kw">forall</span>(<span class="kw">materia</span>(<span class="var">Materia</span>, <span class="var">Anio</span>), <span class="kw">aprobo</span>(<span class="var">Alumno</span>, <span class="var">Materia</span>)).
+
+<span class="op">?-</span> <span class="kw">terminoAnio</span>(<span class="var">Alumno</span>, <span class="num">2</span>).  <span class="var">Alumno</span> <span class="op">=</span> <span class="str">nicolas</span> ; ...</pre>
+</div>
+
+<div class="alert warning">
+  <span class="alert-icon">⚠</span>
+  <span><strong>Trampa del vacuo verdadero:</strong> <code>forall(P, Q)</code> es <em>verdadero</em> cuando <code>P</code> es <em>false</em> para todos (no hay casos). Por eso <code>?- terminoAnio(nicolas, 5). → true</code> si no hay materias en el año 5. Fijar el dominio con un generador de año evita este problema.</span>
+</div>
+
+<h3>Del not al forall y viceversa</h3>
+<p>Las dos formas son lógicamente equivalentes, pero <code>forall</code> es más legible:</p>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Con forall</th><th>Equivalente con not</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>forall(p(X), q(X))</code></td>
+        <td><code>not((p(X), not(q(X))))</code></td>
+      </tr>
+      <tr>
+        <td>∀x / p(x) ⇒ q(x)</td>
+        <td>∄x / p(x) ∧ ¬q(x)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Lógica de conjuntos con forall</h3>
+<div class="code-block">
+<pre><span class="cmt">% A está incluido en B</span>
+<span class="kw">incluido</span>(<span class="var">A</span>, <span class="var">B</span>):- <span class="kw">forall</span>(<span class="kw">member</span>(<span class="var">X</span>, <span class="var">A</span>), <span class="kw">member</span>(<span class="var">X</span>, <span class="var">B</span>)).
+
+<span class="cmt">% A es disjunto de B (no comparten elementos)</span>
+<span class="kw">disjuntos</span>(<span class="var">A</span>, <span class="var">B</span>):- <span class="kw">forall</span>(<span class="kw">member</span>(<span class="var">X</span>, <span class="var">A</span>), <span class="kw">not</span>(<span class="kw">member</span>(<span class="var">X</span>, <span class="var">B</span>))).</pre>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── FINDALL ── -->
+<div class="section-title" id="m4-findall">findall/3 — recolección de soluciones</div>
+<p class="sub">Recolecta todas las soluciones de una consulta en una lista.</p>
+
+<p><code>findall(X, Consulta, Lista)</code> es el predicado que permite "saltar" de las respuestas individuales de Prolog a una <strong>lista con todos los resultados</strong>. Es la puerta de entrada para operaciones sobre conjuntos de soluciones.</p>
+
+<div class="card">
+  <div class="card-title">Anatomía de findall/3</div>
+  <p><strong>1er arg:</strong> el individuo (o expresión) que queremos recolectar.<br>
+  <strong>2do arg:</strong> la consulta que genera los valores de ese individuo.<br>
+  <strong>3er arg:</strong> la lista resultado.</p>
+</div>
+
+<div class="code-block teal">
+  <div class="label">Ejemplo — hijos de Homero</div>
+  <pre><span class="kw">padre</span>(<span class="str">homero</span>, <span class="str">bart</span>).
+<span class="kw">padre</span>(<span class="str">homero</span>, <span class="str">maggie</span>).
+<span class="kw">padre</span>(<span class="str">homero</span>, <span class="str">lisa</span>).
+<span class="kw">padre</span>(<span class="str">juan</span>, <span class="str">fede</span>).
+
+<span class="kw">cantidadDeHijos</span>(<span class="var">Padre</span>, <span class="var">Cantidad</span>):-
+  <span class="kw">padre</span>(<span class="var">Padre</span>, <span class="op">_</span>),         <span class="cmt">% generador: liga Padre</span>
+  <span class="kw">findall</span>(<span class="var">Hijo</span>, <span class="kw">padre</span>(<span class="var">Padre</span>, <span class="var">Hijo</span>), <span class="var">Hijos</span>),
+  <span class="kw">length</span>(<span class="var">Hijos</span>, <span class="var">Cantidad</span>).
+
+<span class="op">?-</span> <span class="kw">cantidadDeHijos</span>(<span class="str">homero</span>, <span class="var">N</span>).  <span class="var">N</span> <span class="op">=</span> <span class="num">3</span>
+<span class="op">?-</span> <span class="kw">cantidadDeHijos</span>(<span class="var">P</span>, <span class="var">N</span>).
+<span class="var">P</span> <span class="op">=</span> <span class="str">homero</span>, <span class="var">N</span> <span class="op">=</span> <span class="num">3</span> ; <span class="var">P</span> <span class="op">=</span> <span class="str">juan</span>, <span class="var">N</span> <span class="op">=</span> <span class="num">1</span></pre>
+</div>
+
+<h3>Inversibilidad de findall/3</h3>
+<p>Si una variable libre en la consulta del <code>findall</code> no está ligada antes de llegar a él, el predicado ignorará esa distinción y recolectará <em>todas</em> las soluciones sin filtrar. El efecto es incorrecto.</p>
+
+<div class="code-block amber">
+  <div class="label">Sin generador — resultado incorrecto</div>
+  <pre><span class="cmt">% Padre sin ligar: findall recolecta hijos de TODOS</span>
+<span class="kw">cantidadDeHijos</span>(<span class="var">Padre</span>, <span class="var">N</span>):-
+  <span class="kw">findall</span>(<span class="var">Hijo</span>, <span class="kw">padre</span>(<span class="var">Padre</span>, <span class="var">Hijo</span>), <span class="var">Hijos</span>),
+  <span class="kw">length</span>(<span class="var">Hijos</span>, <span class="var">N</span>).
+
+<span class="op">?-</span> <span class="kw">cantidadDeHijos</span>(<span class="var">P</span>, <span class="var">N</span>).  <span class="var">N</span> <span class="op">=</span> <span class="num">4</span>  <span class="cmt">% suma bart+maggie+lisa+fede</span></pre>
+</div>
+
+<div class="alert info">
+  <span class="alert-icon">ℹ</span>
+  <span><strong>findall y el vacío:</strong> si la consulta no tiene soluciones, <code>findall</code> devuelve <code>[]</code> (lista vacía) en lugar de <code>false</code>. Esto implica que <code>cantidadDeHijos(bart, N)</code> daría <code>N=0</code> si usamos un generador de personas, o <code>false</code> si el generador es solo "los que son padres".</span>
+</div>
+
+<h3>Consultas compuestas dentro del findall</h3>
+<p>El segundo parámetro puede ser una conjunción de condiciones, envuelta entre paréntesis para preservar la aridad 3 de <code>findall</code>.</p>
+
+<div class="code-block">
+  <div class="label">Múltiples condiciones en el 2do parámetro</div>
+  <pre><span class="cmt">% Cantidad de hijos varones</span>
+<span class="kw">cuantosPibes</span>(<span class="var">P</span>, <span class="var">N</span>):-
+  <span class="kw">persona</span>(<span class="var">P</span>),
+  <span class="kw">findall</span>(<span class="var">Hijo</span>, (<span class="kw">padre</span>(<span class="var">P</span>, <span class="var">Hijo</span>), <span class="kw">varon</span>(<span class="var">Hijo</span>)), <span class="var">Varones</span>),
+  <span class="kw">length</span>(<span class="var">Varones</span>, <span class="var">N</span>).</pre>
+</div>
+
+<h3>Functores dentro del findall</h3>
+<p>Se puede usar un functor como primer argumento para recolectar pares o tuplas de datos. Esto es ideal para construir "tablas" o estructuras compuestas.</p>
+
+<div class="code-block">
+  <div class="label">Tabla de posiciones (puntaje + equipo)</div>
+  <pre><span class="cmt">% puntos/2 es un functor, no un predicado</span>
+<span class="op">?-</span> <span class="kw">findall</span>(<span class="kw">puntos</span>(<span class="var">Equipo</span>, <span class="var">Pts</span>),
+            <span class="kw">puntaje</span>(<span class="var">Equipo</span>, <span class="var">Pts</span>),
+            <span class="var">Tabla</span>).
+<span class="var">Tabla</span> <span class="op">=</span> [<span class="kw">puntos</span>(<span class="str">boca</span>, <span class="num">30</span>), <span class="kw">puntos</span>(<span class="str">river</span>, <span class="num">28</span>), ...]</pre>
+</div>
+
+<h3>Aplicaciones frecuentes de findall</h3>
+
+<div class="code-block">
+  <div class="label">Ejemplos combinados</div>
+  <pre><span class="cmt">% Suma de minutos jugados por un niño</span>
+<span class="kw">minutosQueJugo</span>(<span class="var">Nene</span>, <span class="var">Total</span>):-
+  <span class="kw">nene</span>(<span class="var">Nene</span>),
+  <span class="kw">findall</span>(<span class="var">Min</span>, <span class="kw">jugoCon</span>(<span class="var">Nene</span>, <span class="op">_</span>, <span class="var">Min</span>), <span class="var">Lista</span>),
+  <span class="kw">sum_list</span>(<span class="var">Lista</span>, <span class="var">Total</span>).
+
+<span class="cmt">% Intersección de dos conjuntos</span>
+<span class="kw">interseccion</span>(<span class="var">Xs</span>, <span class="var">Ys</span>, <span class="var">Zs</span>):-
+  <span class="kw">findall</span>(<span class="var">E</span>, (<span class="kw">member</span>(<span class="var">E</span>,<span class="var">Xs</span>), <span class="kw">member</span>(<span class="var">E</span>,<span class="var">Ys</span>)), <span class="var">Zs</span>).
+
+<span class="cmt">% Coleccionista: todos sus items son valiosos</span>
+<span class="kw">coleccionista</span>(<span class="var">A</span>):-
+  <span class="kw">tiene</span>(<span class="var">A</span>, <span class="op">_</span>),                               <span class="cmt">% generador</span>
+  <span class="kw">forall</span>(<span class="kw">tiene</span>(<span class="var">A</span>, <span class="var">Cosa</span>), <span class="kw">vale</span>(<span class="var">Cosa</span>)).</pre>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── RESUMEN ── -->
+<div class="section-title" id="m4-resumen">Resumen y tabla comparativa</div>
+<p class="sub">Los tres predicados de orden superior y sus reglas de uso.</p>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Predicado</th>
+        <th>Aridad</th>
+        <th>Qué expresa</th>
+        <th>Cuándo NO es inversible</th>
+        <th>Solución</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>not/1</code></td>
+        <td>1</td>
+        <td>∄x / p(x)</td>
+        <td>Si hay variables sin ligar dentro del <code>not</code>.</td>
+        <td>Agregar predicado generador antes del <code>not</code>.</td>
+      </tr>
+      <tr>
+        <td><code>forall/2</code></td>
+        <td>2</td>
+        <td>∀x / p(x) ⇒ q(x)</td>
+        <td>Si las variables del primer o segundo arg. no están ligadas.</td>
+        <td>Ligar todas las variables relevantes antes del <code>forall</code>.</td>
+      </tr>
+      <tr>
+        <td><code>findall/3</code></td>
+        <td>3</td>
+        <td>Recolecta todas las soluciones en una lista.</td>
+        <td>Si variables en el 2do arg. no están ligadas (mezcla resultados).</td>
+        <td>Agregar predicado generador antes del <code>findall</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert success">
+  <span class="alert-icon">✓</span>
+  <span><strong>Regla de oro de la inversibilidad:</strong> cualquier variable que aparezca dentro de <code>not</code>, <code>forall</code> o <code>findall</code> debe estar ligada <em>antes</em> de llegar a ese predicado, mediante un predicado generador que la unifique. Sin generador, el predicado solo responde consultas de verificación (sí/no), pero no puede enumerar soluciones.</span>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Concepto</th><th>Módulo</th><th>Idea clave</th></tr></thead>
+    <tbody>
+      <tr><td>Individuos simples</td><td>3</td><td>Átomos, números, strings. Indivisibles.</td></tr>
+      <tr><td><code>is/2</code></td><td>3</td><td>Evalúa expresión aritmética. Variable libre en la derecha → error.</td></tr>
+      <tr><td>Pattern matching</td><td>3</td><td>Prolog prueba todas las cláusulas (no solo la primera).</td></tr>
+      <tr><td>Listas</td><td>3</td><td>Estructura recursiva. Patrón <code>[H|T]</code> separa cabeza y cola.</td></tr>
+      <tr><td>Functores</td><td>3</td><td>Individuo compuesto con nombre y aridad. No tiene valor de verdad.</td></tr>
+      <tr><td><code>not/1</code></td><td>4</td><td>Negación por falla. Variables deben ligarse antes.</td></tr>
+      <tr><td><code>forall/2</code></td><td>4</td><td>Cuantificación universal. Cuidado con el vacuo verdadero.</td></tr>
+      <tr><td><code>findall/3</code></td><td>4</td><td>Recolecta soluciones en lista. La variable a recolectar debe estar ligada en el generador.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</main>
+
+<footer>
+  Paradigma Lógico · Módulos 3 y 4 · Guía de estudio generada a partir de los apuntes de cátedra
+</footer>
+
+</body>
+</html>

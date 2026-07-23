@@ -64,6 +64,16 @@ Cada carpeta es un ejercicio independiente dado por la cátedra. Adentro encontr
 
 ---
 
+## Material de estudio:
+
+| Modulo | Tema |
+|--------|------|
+| [01](./MaterialTeorico/guia_modulos1y2.html) | **Predicados, Individuos, Consultas, Universo Cerrado, Variables, Reglas, Inversibilidad** |
+| [02](./MaterialTeorico/guia-modulos-3-4.html) | **Individuos simples, Pattern matching, Listas, Functores, not/1, forall/2, findall/3** |
+| [03]() | **Recursividad y Delegación** |
+| [04](./MaterialTeorico/modulo7_explosion_combinatoria.html) |**Explosión Combinatoria** |
+
+---
 ## Cómo correr un ejercicio
 
 Necesitás tener [SWI-Prolog](https://www.swi-prolog.org/Download.html) instalado.

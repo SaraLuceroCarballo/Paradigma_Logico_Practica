@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paradigma Lógico — Guía de Estudio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
+  :root {
+    --bg:        #0d1117;
+    --surface:   #161b22;
+    --surface2:  #1c2330;
+    --border:    #30363d;
+    --accent:    #7ee787;
+    --accent2:   #58a6ff;
+    --accent3:   #f78166;
+    --accent4:   #d2a8ff;
+    --text:      #e6edf3;
+    --text-muted:#8b949e;
+    --code-bg:   #0d1117;
+    --true:      #3fb950;
+    --false:     #f85149;
+    --tag-bg:    #1f2937;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 3px 12px;
+    letter-spacing: .08em;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent4);
+  }
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .modules-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .mod-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent2);
+  }
+
+  /* ── SECTION ── */
+  section {
+    margin-bottom: 52px;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  h2 .h2-num {
+    color: var(--accent);
+    font-style: italic;
+    margin-right: 8px;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin: 24px 0 10px;
+    letter-spacing: .01em;
+  }
+
+  p { margin-bottom: 14px; }
+
+  /* ── CODE ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 16px 0 20px;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent4);
+  }
+  .kw  { color: var(--accent2); }
+  .pred{ color: var(--accent);  }
+  .var { color: var(--accent4); }
+  .ind { color: #ffa657; }
+  .op  { color: var(--accent3); }
+  .com { color: var(--text-muted); font-style: italic; }
+  .res-true  { color: var(--true);  font-weight: 700; }
+  .res-false { color: var(--false); font-weight: 700; }
+  .prompt { color: var(--text-muted); }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-left: 3px solid;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout-def   { background: #0d2136; border-color: var(--accent2); }
+  .callout-warn  { background: #2d1a0e; border-color: var(--accent3); }
+  .callout-tip   { background: #0e2a15; border-color: var(--accent);  }
+  .callout-exam  { background: #1d1135; border-color: var(--accent4); }
+  .callout-title {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .callout-def  .callout-title { color: var(--accent2); }
+  .callout-warn .callout-title { color: var(--accent3); }
+  .callout-tip  .callout-title { color: var(--accent);  }
+  .callout-exam .callout-title { color: var(--accent4); }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--accent2);
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    letter-spacing: .04em;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  /* ── COMPARISON GRID ── */
+  .cmp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .cmp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .cmp-card h4 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--accent2);
+  }
+  .cmp-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .cmp-card ul li {
+    font-size: 13px;
+    padding: 4px 0;
+    color: var(--text);
+  }
+  .cmp-card ul li::before { content: '→ '; color: var(--accent); }
+
+  /* ── QUERY CONSOLE ── */
+  .console {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .console .q { color: var(--accent2); }
+  .console .q::before { content: '?- '; color: var(--text-muted); }
+  .console .r-t { color: var(--true); }
+  .console .r-f { color: var(--false); }
+  .console .r-v { color: var(--accent4); }
+  .console .r-e { color: var(--accent3); }
+  .console .sep { color: var(--text-muted); margin-left: 8px; }
+  .console .comment { color: var(--text-muted); font-style: italic; }
+
+  /* ── CONCEPT PILL ── */
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 2px;
+  }
+  .pill-green  { background: #0e2a15; color: var(--accent);  border: 1px solid var(--accent);  }
+  .pill-blue   { background: #0d2136; color: var(--accent2); border: 1px solid var(--accent2); }
+  .pill-purple { background: #1d1135; color: var(--accent4); border: 1px solid var(--accent4); }
+  .pill-orange { background: #2d1a0e; color: var(--accent3); border: 1px solid var(--accent3); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── SUMMARY BOX ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .summary-card .sc-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .summary-card .sc-val {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 0 0 52px;
+  }
+  .toc-title {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .toc ol { padding-left: 18px; }
+  .toc li { margin: 6px 0; font-size: 14px; }
+  .toc a  { color: var(--accent2); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc .toc-mod {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-right: 6px;
+    font-weight: 700;
+  }
+  .m1 { background: #0d2136; color: var(--accent2); }
+  .m2 { background: #1d1135; color: var(--accent4); }
+
+  @media (max-width: 600px) {
+    .cmp-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="badge">GUÍA DE ESTUDIO</div>
+  <h1>Paradigma <em>Lógico</em></h1>
+  <p class="subtitle">Módulos 1 y 2 · Programación Lógica con Prolog</p>
+  <div class="modules-row">
+    <div class="mod-chip">Módulo 1 — Predicados, Individuos, Consultas, Universo Cerrado</div>
+    <div class="mod-chip">Módulo 2 — Variables, Reglas, Inversibilidad</div>
+  </div>
+</header>
+
+<!-- ══════════════ TOC ══════════════ -->
+<nav class="toc">
+  <div class="toc-title">Contenidos</div>
+  <ol>
+    <li><span class="toc-mod m1">M1</span><a href="#intro">Introducción al Paradigma Lógico</a></li>
+    <li><span class="toc-mod m1">M1</span><a href="#predicados">Predicados e Individuos</a></li>
+    <li><span class="toc-mod m1">M1</span><a href="#consultas-basicas">Consultas básicas (verificación)</a></li>
+    <li><span class="toc-mod m1">M1</span><a href="#universo">Principio de Universo Cerrado</a></li>
+    <li><span class="toc-mod m1">M1</span><a href="#poliadicos">Predicados Poliádicos</a></li>
+    <li><span class="toc-mod m1">M1</span><a href="#extension">Definición por Extensión</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#variables">Variables y Consultas Existenciales</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#inversibilidad">Inversibilidad</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#reglas">Reglas (simples)</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#unificacion">Unificación vs. Asignación</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#reglas-compuestas">Reglas Compuestas (AND / OR)</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#comprension">Definición por Comprensión</a></li>
+    <li><span class="toc-mod m2">M2</span><a href="#resumen">Resumen y Errores frecuentes</a></li>
+  </ol>
+</nav>
+
+<!-- ══════════════ 1. INTRO ══════════════ -->
+<section id="intro">
+  <div class="section-label">Módulo 1</div>
+  <h2><span class="h2-num">01</span>Introducción al Paradigma Lógico</h2>
+
+  <p>Hasta ahora conocimos distintas maneras de construir software. El <strong>paradigma lógico</strong> es una visión <em>declarativa</em>: en lugar de describir <em>cómo</em> resolver un problema paso a paso, describimos <em>qué</em> sabemos sobre el problema, y delegamos la estrategia de resolución a un motor externo.</p>
+
+  <div class="cmp-grid">
+    <div class="cmp-card">
+      <h4>Visión Imperativa / Procedimental</h4>
+      <ul>
+        <li>Secuencia de pasos a ejecutar</li>
+        <li>Estados intermedios en variables de memoria</li>
+        <li>Respeta arquitectura Von Neumann</li>
+        <li>El programador define el <em>cómo</em></li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <h4>Visión Declarativa / Lógica</h4>
+      <ul>
+        <li>Sin algoritmo explícito</li>
+        <li>Solo definiciones (el <em>qué</em>)</li>
+        <li>Motor de inferencia construye el algoritmo</li>
+        <li>Concentración en lo esencial del problema</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Concepto clave: Aplicación en el Paradigma Lógico</div>
+    Una aplicación en el paradigma lógico tiene dos partes:
+    <br><strong>(1) Base de conocimiento</strong> — archivo <code>.pl</code> donde se declaran hechos y reglas con cualquier editor de texto.
+    <br><strong>(2) Consultas</strong> — el motor de inferencia de Prolog saca conclusiones a partir de ese conocimiento.
+  </div>
+</section>
+
+<!-- ══════════════ 2. PREDICADOS E INDIVIDUOS ══════════════ -->
+<section id="predicados">
+  <div class="section-label">Módulo 1</div>
+  <h2><span class="h2-num">02</span>Predicados e Individuos</h2>
+
+  <p>La base de conocimiento se construye mediante <strong>predicados</strong> e <strong>individuos</strong>. Veamos el ejemplo fundamental:</p>
+
+<pre><span class="com">% Base de conocimiento: comidas.pl</span>
+<span class="pred">pastas</span>(<span class="ind">ravioles</span>).
+<span class="pred">pastas</span>(<span class="ind">fideos</span>).</pre>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Definición: Predicado</div>
+    Un <strong>predicado</strong> representa una relación o propiedad dentro del universo de conocimiento. Se identifica por su <strong>nombre</strong> y su <strong>aridad</strong> (cantidad de argumentos). Se escribe como <code>nombre/aridad</code>. En el ejemplo: <code>pastas/1</code>.
+  </div>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Definición: Individuo (átomo)</div>
+    Los <strong>individuos</strong> son los elementos que participan de las relaciones. Se escriben siempre en <strong>minúscula</strong> (o entre comillas si contienen espacios). Son los "datos" del universo. Ejemplos: <code>ravioles</code>, <code>fideos</code>, <code>juan</code>, <code>socrates</code>.
+  </div>
+
+  <table>
+    <tr>
+      <th>Tipo de predicado</th>
+      <th>Aridad</th>
+      <th>Descripción</th>
+      <th>Ejemplo</th>
+    </tr>
+    <tr>
+      <td><strong>Monádico</strong></td>
+      <td>1</td>
+      <td>Expresa una característica o atributo de un individuo</td>
+      <td><code>pastas/1</code>, <code>animal/1</code></td>
+    </tr>
+    <tr>
+      <td><strong>Poliádico</strong></td>
+      <td>2 o más</td>
+      <td>Expresa una relación entre dos o más individuos</td>
+      <td><code>come/2</code>, <code>progenitor/2</code></td>
+    </tr>
+  </table>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Convención sintáctica importante</div>
+    En Prolog, la distinción mayúsculas/minúsculas es fundamental:
+    <br>• <code>ravioles</code> (minúscula) → <strong>individuo / átomo</strong> (un valor concreto)
+    <br>• <code>Pasta</code> (mayúscula) → <strong>variable / incógnita</strong> (lo veremos en el Módulo 2)
+  </div>
+</section>
+
+<!-- ══════════════ 3. CONSULTAS BÁSICAS ══════════════ -->
+<section id="consultas-basicas">
+  <div class="section-label">Módulo 1</div>
+  <h2><span class="h2-num">03</span>Consultas de Verificación</h2>
+
+  <p>Una vez cargada la base de conocimiento, se abre una consola donde se disparan <strong>consultas</strong>. El motor de inferencia evalúa si la relación consultada puede probarse a partir del conocimiento disponible.</p>
+
+  <p>Las consultas de <strong>verificación</strong> tienen todos sus argumentos instanciados (son individuos concretos). El resultado es siempre <code>true</code> o <code>false</code>.</p>
+
+  <div class="console">
+    <div class="q">pastas(ravioles).</div>
+    <div class="r-t">true</div>
+    <br>
+    <div class="q">pastas(fideos).</div>
+    <div class="r-t">true</div>
+    <br>
+    <div class="q">pastas(asado).</div>
+    <div class="r-f">false</div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠ El punto final es obligatorio</div>
+    Toda consulta en Prolog debe terminar con un punto <code>.</code>. Si se omite, Prolog muestra el símbolo <code>|</code> esperando que se continúe la consulta en la siguiente línea. Sin el punto, la consulta no se evalúa.
+  </div>
+</section>
+
+<!-- ══════════════ 4. UNIVERSO CERRADO ══════════════ -->
+<section id="universo">
+  <div class="section-label">Módulo 1</div>
+  <h2><span class="h2-num">04</span>Principio de Universo Cerrado</h2>
+
+  <p>Ante una consulta que no puede probarse a partir de la base de conocimiento, Prolog tiene una respuesta definida. Existen dos filosofías posibles:</p>
+
+  <div class="cmp-grid">
+    <div class="cmp-card">
+      <h4>Universo Abierto</h4>
+      <ul>
+        <li>Tres estados: verdadero, falso y <strong>desconocido</strong></li>
+        <li>Lo que no se puede probar es "desconocido"</li>
+        <li>Algunos lenguajes semánticos (OWL, RDF)</li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <h4>Universo Cerrado (Prolog)</h4>
+      <ul>
+        <li>Solo dos estados: verdadero y falso</li>
+        <li>Todo lo que no se puede probar es <strong>falso</strong></li>
+        <li>Prolog, SQL y similares</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Principio de Universo Cerrado (CWA)</div>
+    En Prolog, todo aquello que no figure en la base de conocimientos —o que no pueda derivarse de ella— se asume <strong>falso</strong>. La base de conocimiento define el universo completo de lo que es cierto; lo demás no existe.
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Consecuencia práctica clave</div>
+    <strong>No tiene sentido escribir hechos negativos.</strong> Bajo el universo cerrado, si <code>asado</code> no aparece en las cláusulas de <code>pastas/1</code>, ya sabemos que <code>pastas(asado)</code> es falso. Escribir explícitamente "el asado no es una pasta" sería redundante e incorrecto en Prolog.
+    <br><br>
+    <code class="com">% CORRECTO: simplemente no se escribe</code>
+    <br><code>pastas(ravioles).</code><br>
+    <code>pastas(fideos).</code>
+    <br><br>
+    <code class="com">% INCORRECTO / SIN SENTIDO: el universo cerrado ya lo asume falso</code>
+    <br><code style="color:var(--false)">no_es_pasta(asado).</code> <span style="color:var(--text-muted)">← innecesario</span>
+  </div>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Definición: Hecho y Cláusula</div>
+    Un <strong>hecho</strong> es una afirmación codificada en la base de conocimiento con la sintaxis <code>predicado(arg1, arg2, ...).</code>, que se asume verdadera por el solo hecho de estar escrita. Cada hecho es una <strong>cláusula</strong>. Más adelante, las reglas también son cláusulas.
+  </div>
+</section>
+
+<!-- ══════════════ 5. POLIÁDICOS ══════════════ -->
+<section id="poliadicos">
+  <div class="section-label">Módulo 1</div>
+  <h2><span class="h2-num">05</span>Predicados Poliádicos</h2>
+
+  <p>Cuando una relación involucra más de un individuo, se usan predicados con más de un argumento (aridad ≥ 2). Expresan <em>relaciones entre individuos</em>.</p>
+
+<pre><span class="pred">come</span>(<span class="ind">juan</span>, <span class="ind">ravioles</span>).
+<span class="pred">come</span>(<span class="ind">brenda</span>, <span class="ind">fideos</span>).
+<span class="pred">gusta</span>(<span class="ind">brenda</span>, <span class="ind">fideos</span>).</pre>
+
+  <div class="console">
+    <div class="comment">% El orden de los argumentos importa</div>
+    <div class="q">come(brenda, fideos).</div>
+    <div class="r-t">true</div>
+    <br>
+    <div class="q">come(fideos, brenda).</div>
+    <div class="r-f">false</div>
+    <span class="comment">← invertir orden no es equivalente</span>
+    <br><br>
+    <div class="comment">% La aridad debe coincidir exactamente</div>
+    <div class="q">come(brenda, fideos, ricos).</div>
+    <div class="r-e">ERROR: Undefined procedure: come/3</div>
+    <span class="comment">← come está definido como come/2, no come/3</span>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠ Errores comunes con predicados poliádicos</div>
+    <strong>1. Orden de argumentos:</strong> las relaciones no son bidireccionales por defecto. <code>come(juan, pizza)</code> no implica <code>come(pizza, juan)</code>. El orden lo define el programador y debe ser consistente.<br><br>
+    <strong>2. Aridad incorrecta:</strong> consultar <code>come/3</code> cuando solo existe <code>come/2</code> produce un error de "procedimiento indefinido".<br><br>
+    <strong>3. Intercalar cláusulas:</strong> es buena práctica escribir todas las cláusulas de un mismo predicado juntas (contiguas). Si se intercalan con otros predicados, Prolog emite una advertencia.
+  </div>
+</section>
+
+<!-- ══════════════ 6. EXTENSIÓN ══════════════ -->
+<section id="extension">
+  <div class="section-label">Módulo 1</div>
+  <h2><span class="h2-num">06</span>Definición por Extensión</h2>
+
+  <p>Cuando definimos un predicado listando explícitamente <em>todos</em> los individuos que lo satisfacen, hablamos de una <strong>definición por extensión</strong>. Es equivalente a enumerar los elementos de un conjunto.</p>
+
+<pre><span class="pred">animal</span>(<span class="ind">tigre</span>).
+<span class="pred">animal</span>(<span class="ind">oso</span>).
+<span class="pred">animal</span>(<span class="ind">elefante</span>).
+<span class="com">% Esto es como decir: Animales = { tigre, oso, elefante }</span>
+
+<span class="pred">planeta</span>(<span class="ind">venus</span>).
+<span class="pred">planeta</span>(<span class="ind">tierra</span>).</pre>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">Desventajas de la definición por extensión</div>
+    • Requiere enumerar <strong>todos</strong> los elementos del conjunto manualmente.<br>
+    • Para conjuntos grandes es incómodo e impráctico.<br>
+    • No aporta información sobre <em>qué característica comparten</em> los elementos.<br>
+    • La alternativa (que veremos en el Módulo 2) es la <strong>definición por comprensión</strong>, usando reglas.
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════════ 7. VARIABLES ══════════════ -->
+<section id="variables">
+  <div class="section-label">Módulo 2</div>
+  <h2><span class="h2-num">07</span>Variables y Consultas Existenciales</h2>
+
+  <p>Hasta ahora preguntábamos si algo específico se cumplía. Las <strong>variables</strong> (incógnitas) permiten preguntar <em>qué individuos</em> satisfacen una relación. En Prolog, toda palabra que comienza con <strong>mayúscula</strong> es una variable.</p>
+
+<pre><span class="com">% Base de conocimiento</span>
+<span class="pred">pastas</span>(<span class="ind">ravioles</span>).
+<span class="pred">pastas</span>(<span class="ind">fideos</span>).
+
+<span class="pred">come</span>(<span class="ind">juan</span>, <span class="ind">ravioles</span>).
+<span class="pred">come</span>(<span class="ind">melina</span>, <span class="ind">ravioles</span>).
+<span class="pred">come</span>(<span class="ind">brenda</span>, <span class="ind">fideos</span>).
+<span class="pred">come</span>(<span class="ind">juan</span>, <span class="ind">fideos</span>).</pre>
+
+  <div class="console">
+    <div class="comment">% Consulta existencial: ¿qué individuos son pastas?</div>
+    <div class="q">pastas(Pasta).</div>
+    <div class="r-v">Pasta = ravioles ;</div>
+    <div class="r-v">Pasta = fideos .</div>
+    <br>
+    <div class="comment">% ¿Quiénes comen ravioles?</div>
+    <div class="q">come(Persona, ravioles).</div>
+    <div class="r-v">Persona = juan ;</div>
+    <div class="r-v">Persona = melina ;</div>
+    <div class="r-f">false</div>
+    <br>
+    <div class="comment">% ¿Qué come juan?</div>
+    <div class="q">come(juan, Comida).</div>
+    <div class="r-v">Comida = ravioles ;</div>
+    <div class="r-v">Comida = fideos ;</div>
+    <div class="r-f">false</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Navegación de resultados múltiples</div>
+    Cuando hay más de una solución posible, Prolog muestra una a la vez y espera. Para <strong>ver la siguiente</strong> solución: presionar <code>;</code> (punto y coma), <code>n</code>, <code>espacio</code> o <code>tab</code>. Para <strong>detener</strong> la búsqueda: presionar <code>.</code> o <code>Enter</code>.
+  </div>
+
+  <h3>Variable Anónima <code>_</code></h3>
+  <p>Cuando queremos preguntar si <em>existe algún individuo</em> que satisfaga una relación, sin importar cuál es, usamos la <strong>variable anónima</strong> <code>_</code> (guión bajo).</p>
+
+  <div class="console">
+    <div class="comment">% ¿Existe alguna pasta?</div>
+    <div class="q">pastas(_).</div>
+    <div class="r-t">true</div>
+    <br>
+    <div class="comment">% ¿Existe alguien que coma algo?</div>
+    <div class="q">come(_, _).</div>
+    <div class="r-t">true</div>
+  </div>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Tipos de consulta — Resumen</div>
+    <table style="margin:0">
+      <tr>
+        <th>Tipo</th>
+        <th>Argumentos</th>
+        <th>Ejemplo</th>
+        <th>Resultado</th>
+      </tr>
+      <tr>
+        <td><strong>Verificación</strong></td>
+        <td>Todos instanciados (individuos concretos)</td>
+        <td><code>come(juan, ravioles).</code></td>
+        <td><code>true</code> / <code>false</code></td>
+      </tr>
+      <tr>
+        <td><strong>Existencial con variable anónima</strong></td>
+        <td>Algún argumento es <code>_</code></td>
+        <td><code>pastas(_).</code></td>
+        <td><code>true</code> / <code>false</code></td>
+      </tr>
+      <tr>
+        <td><strong>Existencial con variable nombrada</strong></td>
+        <td>Algún argumento es una variable (mayúscula)</td>
+        <td><code>pastas(Pasta).</code></td>
+        <td>Los valores que satisfacen la relación</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════ 8. INVERSIBILIDAD ══════════════ -->
+<section id="inversibilidad">
+  <div class="section-label">Módulo 2</div>
+  <h2><span class="h2-num">08</span>Inversibilidad</h2>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Definición: Inversibilidad</div>
+    Un predicado es <strong>inversible</strong> cuando admite consultas con variables libres en sus argumentos: es decir, cuando puede responderse tanto instanciando el argumento (verificación) como dejándolo libre (consulta existencial). Los hechos son totalmente inversibles porque no tienen restricciones.
+  </div>
+
+  <div class="console">
+    <div class="comment">% come/2 es inversible: funciona con cualquier combinación</div>
+    <div class="q">come(juan, ravioles).</div>
+    <div class="r-t">true</div>
+    <span class="comment">← ambos instanciados</span>
+    <br>
+    <div class="q">come(Persona, ravioles).</div>
+    <div class="r-v">Persona = juan ; Persona = melina</div>
+    <span class="comment">← primer argumento libre</span>
+    <br>
+    <div class="q">come(juan, Comida).</div>
+    <div class="r-v">Comida = ravioles ; Comida = fideos</div>
+    <span class="comment">← segundo argumento libre</span>
+    <br>
+    <div class="q">come(Persona, Comida).</div>
+    <div class="r-v">Persona = juan, Comida = ravioles ; ...</div>
+    <span class="comment">← ambos libres</span>
+  </div>
+
+  <p>No siempre todos los predicados son totalmente inversibles. Las reglas que usan operaciones aritméticas o ciertos predicados built-in pueden restringir qué argumentos pueden dejarse libres. Veremos esto más adelante en la materia.</p>
+</section>
+
+<!-- ══════════════ 9. REGLAS SIMPLES ══════════════ -->
+<section id="reglas">
+  <div class="section-label">Módulo 2</div>
+  <h2><span class="h2-num">09</span>Reglas (simples)</h2>
+
+  <p>Además de los hechos (axiomas), Prolog permite escribir <strong>reglas</strong>: predicados cuya verdad se deriva de otros predicados. Las reglas modelan la implicación lógica.</p>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Silogismo → Regla en Prolog</div>
+    El razonamiento clásico de Sócrates se formaliza así:
+    <br><br>
+    <code>∀(x)(humano(x) ⇒ mortal(x))</code> &nbsp;→&nbsp; "todo humano es mortal"<br>
+    <code>humano(socrates)</code> &nbsp;→&nbsp; "Sócrates es humano"
+    <br><br>
+    En lógica se escribe <strong>p ⇒ q</strong>. En sintaxis Prolog (cláusula de Horn) se escribe <strong>al revés</strong>: <code>q :- p.</code>
+  </div>
+
+<pre><span class="com">% Regla: mortal si es humano (cláusula de Horn)</span>
+<span class="pred">mortal</span>(<span class="var">Persona</span>) :- <span class="pred">humano</span>(<span class="var">Persona</span>).
+
+<span class="com">% Hecho: Sócrates es humano</span>
+<span class="pred">humano</span>(<span class="ind">socrates</span>).
+<span class="pred">humano</span>(<span class="ind">platon</span>).</pre>
+
+  <div class="console">
+    <div class="q">mortal(socrates).</div>
+    <div class="r-t">true</div>
+    <br>
+    <div class="q">mortal(deadpool).</div>
+    <div class="r-f">false</div>
+    <span class="comment">← humano(deadpool) no puede probarse → mortal(deadpool) falla</span>
+    <br><br>
+    <div class="q">mortal(Quien).</div>
+    <div class="r-v">Quien = socrates ;</div>
+    <div class="r-v">Quien = platon .</div>
+  </div>
+
+  <div class="callout callout-def">
+    <div class="callout-title">Estructura de una regla</div>
+    <code>consecuente :- antecedente1, antecedente2, ...</code>
+    <br><br>
+    • <strong>Consecuente</strong>: el predicado que se intenta satisfacer (cabeza de la cláusula).<br>
+    • <strong>Antecedentes</strong>: condiciones que deben cumplirse para que el consecuente sea verdadero.<br>
+    • Si todos los antecedentes se satisfacen, el consecuente también.<br>
+    • Un predicado puede ser <strong>hecho</strong> (sin antecedentes) o <strong>regla</strong> (con al menos uno).
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Ventaja declarativa</div>
+    No tiene sentido escribir <code>mortal(socrates).</code> como hecho adicional, porque esa información <em>ya puede derivarse</em> de la regla y del hecho <code>humano(socrates).</code> Agregar el hecho sería redundante. Esto es una de las ventajas del paradigma: evitar repetición de información.
+  </div>
+</section>
+
+<!-- ══════════════ 10. UNIFICACIÓN ══════════════ -->
+<section id="unificacion">
+  <div class="section-label">Módulo 2</div>
+  <h2><span class="h2-num">10</span>Unificación vs. Asignación</h2>
+
+  <p>Uno de los conceptos más importantes y diferenciadores del paradigma lógico es la distinción entre <strong>unificación</strong> y <strong>asignación</strong>.</p>
+
+  <div class="cmp-grid">
+    <div class="cmp-card">
+      <h4>Asignación (imperativo)</h4>
+      <ul>
+        <li>Guarda un valor en una variable de memoria</li>
+        <li>La variable puede cambiar de valor</li>
+        <li><code>x = x + 1</code> tiene sentido: incrementa x</li>
+        <li>Operación destructiva sobre la memoria</li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <h4>Unificación (lógico)</h4>
+      <ul>
+        <li>Resuelve una variable como incógnita</li>
+        <li>La variable se liga a un valor, no se "reasigna"</li>
+        <li><code>X = X + 1</code> es una <strong>contradicción</strong></li>
+        <li>Es una condición, no una instrucción</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-exam">
+    <div class="callout-title">📌 Trampa de examen frecuente</div>
+    <code>X = X + 1</code> en Prolog <strong>NUNCA se puede cumplir</strong>. No es un incremento: es una condición lógica que dice "X es igual a X más 1", lo cual es una contradicción. Si X vale 2, no puede valer 3 al mismo tiempo.
+    <br><br>
+    Además, los predicados en Prolog <strong>no devuelven valores</strong>. Un predicado se satisface o no. No puede usarse como expresión (como en un paradigma funcional o imperativo). Solo se pueden construir más reglas para unificar valores.
+  </div>
+
+  <h3>Backtracking</h3>
+  <p>Cuando hay múltiples soluciones posibles, Prolog las encuentra mediante un mecanismo llamado <strong>backtracking</strong>: prueba cada camino posible, y si uno falla, retrocede y prueba el siguiente. Es el motor que permite que una consulta con variables devuelva múltiples resultados.</p>
+</section>
+
+<!-- ══════════════ 11. REGLAS COMPUESTAS ══════════════ -->
+<section id="reglas-compuestas">
+  <div class="section-label">Módulo 2</div>
+  <h2><span class="h2-num">11</span>Reglas Compuestas (AND / OR)</h2>
+
+  <p>Una regla puede tener múltiples antecedentes conectados por operadores lógicos. Prolog usa una sintaxis específica para cada uno.</p>
+
+<pre><span class="com">% Base de conocimiento</span>
+<span class="pred">viveEn</span>(<span class="ind">tefi</span>, <span class="ind">lanus</span>).
+<span class="pred">viveEn</span>(<span class="ind">gise</span>, <span class="ind">lanus</span>).
+<span class="pred">viveEn</span>(<span class="ind">alf</span>, <span class="ind">lanus</span>).
+<span class="pred">viveEn</span>(<span class="ind">dodain</span>, <span class="ind">liniers</span>).
+
+<span class="pred">docente</span>(<span class="ind">alf</span>).
+<span class="pred">docente</span>(<span class="ind">tefi</span>).
+<span class="pred">docente</span>(<span class="ind">gise</span>).
+<span class="pred">docente</span>(<span class="ind">dodain</span>).</pre>
+
+  <h3>Conjunción — AND (coma)</h3>
+  <p>"Cualquier docente que vive en Lanús es un afortunado": se deben cumplir <em>ambas</em> condiciones. En Prolog, la conjunción se representa con una <strong>coma</strong> <code>,</code>.</p>
+
+<pre><span class="com">% p ∧ q => r</span>
+<span class="com">% afortunado si (es docente) Y (vive en Lanús)</span>
+<span class="pred">afortunado</span>(<span class="var">Persona</span>) :- <span class="pred">docente</span>(<span class="var">Persona</span>), <span class="pred">viveEn</span>(<span class="var">Persona</span>, <span class="ind">lanus</span>).</pre>
+
+  <div class="console">
+    <div class="q">afortunado(alf).</div>
+    <div class="r-t">true</div>
+    <span class="comment">← docente(alf) ✓ y viveEn(alf, lanus) ✓</span>
+    <br>
+    <div class="q">afortunado(dodain).</div>
+    <div class="r-f">false</div>
+    <span class="comment">← docente(dodain) ✓ pero viveEn(dodain, lanus) ✗</span>
+    <br>
+    <div class="q">afortunado(Quien).</div>
+    <div class="r-v">Quien = alf ;</div>
+    <div class="r-v">Quien = tefi ;</div>
+    <div class="r-v">Quien = gise .</div>
+  </div>
+
+  <h3>Disyunción — OR (múltiples cláusulas)</h3>
+  <p>"Si una persona es docente <em>o</em> vive en Lanús, es afortunada": se cumple con <em>alguna</em> de las condiciones. En Prolog, la disyunción se expresa <strong>repitiendo la cabeza de la cláusula</strong> en reglas separadas.</p>
+
+<pre><span class="com">% p ∨ q => r</span>
+<span class="com">% Se satisface por cualquiera de las dos ramas</span>
+<span class="pred">afortunado</span>(<span class="var">Persona</span>) :- <span class="pred">docente</span>(<span class="var">Persona</span>).
+<span class="pred">afortunado</span>(<span class="var">Persona</span>) :- <span class="pred">viveEn</span>(<span class="var">Persona</span>, <span class="ind">lanus</span>).</pre>
+
+  <div class="callout callout-exam">
+    <div class="callout-title">📌 Trampa de examen frecuente</div>
+    Para expresar OR en Prolog, <strong>NO se usa coma</strong> ni ningún operador especial dentro de una sola regla (eso sería AND). Se deben escribir <strong>dos cláusulas separadas</strong> con la misma cabeza.
+    <br><br>
+    <span style="color:var(--false)">❌ INCORRECTO para OR:</span><br>
+    <code>afortunado(P) :- docente(P), viveEn(P, lanus).</code> ← esto es AND<br><br>
+    <span style="color:var(--true)">✅ CORRECTO para OR:</span><br>
+    <code>afortunado(P) :- docente(P).</code><br>
+    <code>afortunado(P) :- viveEn(P, lanus).</code>
+  </div>
+
+  <h3>Reglas compuestas con varios antecedentes y variables</h3>
+  <p>Las variables dentro de una regla se unifican progresivamente: primero se unifica con el primer antecedente, y ese valor ya conocido se usa en los siguientes.</p>
+
+<pre><span class="com">% Mario gusta de las chicas morochas con onda, y también de Luisa</span>
+<span class="pred">gusta</span>(<span class="ind">mario</span>, <span class="var">Chica</span>) :- <span class="pred">morocha</span>(<span class="var">Chica</span>), <span class="pred">tieneOnda</span>(<span class="var">Chica</span>).
+<span class="pred">gusta</span>(<span class="ind">mario</span>, <span class="ind">luisa</span>).
+
+<span class="com">% Todos los que gustan de Ana Y de Luisa, gustan de Laura (AND)</span>
+<span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">laura</span>) :- <span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">ana</span>), <span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">luisa</span>).
+
+<span class="com">% Todos los que gustan de Ana O de Luisa, gustan de Laura (OR)</span>
+<span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">laura</span>) :- <span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">ana</span>).
+<span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">laura</span>) :- <span class="pred">gusta</span>(<span class="var">Alguien</span>, <span class="ind">luisa</span>).</pre>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">El lenguaje natural puede ser engañoso</div>
+    En castellano, "Pedro gusta de Ana <em>y</em> de Nora" puede leerse como AND, pero semánticamente significa que ambas relaciones son verdaderas por separado. En Prolog eso se codifica como dos hechos (OR):
+    <br><code>gusta(pedro, ana).</code><br>
+    <code>gusta(pedro, nora).</code><br><br>
+    El AND se usa cuando se requiere que <em>ambas condiciones se cumplan simultáneamente</em> para el mismo individuo.
+  </div>
+</section>
+
+<!-- ══════════════ 12. COMPRENSIÓN ══════════════ -->
+<section id="comprension">
+  <div class="section-label">Módulo 2</div>
+  <h2><span class="h2-num">12</span>Definición por Comprensión</h2>
+
+  <p>Mientras que la definición por extensión enumera los elementos uno a uno, la <strong>definición por comprensión</strong> describe los elementos por las <em>características que los definen</em>, mediante reglas.</p>
+
+  <div class="cmp-grid">
+    <div class="cmp-card">
+      <h4>Por Extensión</h4>
+      <ul>
+        <li>Enumera cada elemento explícitamente</li>
+        <li>Conjunto de hechos para el mismo predicado</li>
+        <li>Limitado para conjuntos grandes</li>
+        <li><code>animal(tigre).</code> <code>animal(oso).</code></li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <h4>Por Comprensión</h4>
+      <ul>
+        <li>Define qué característica debe cumplir un elemento</li>
+        <li>Una regla que generaliza el conjunto</li>
+        <li>Potente para conjuntos indefinidos o derivados</li>
+        <li><code>mortal(P) :- humano(P).</code></li>
+      </ul>
+    </div>
+  </div>
+
+<pre><span class="com">% Definición matemática: A = { a ∈ ℕ / 2 &lt; a &lt; 6 }</span>
+<span class="pred">a</span>(<span class="var">X</span>) :- <span class="var">X</span> <span class="op">&gt;</span> 2, <span class="var">X</span> <span class="op">&lt;</span> 6.
+
+<span class="com">% Definición matemática: B = { p ∈ ℕ / p &lt; 10, siendo p par }</span>
+<span class="pred">b</span>(<span class="var">X</span>) :- <span class="var">X</span> <span class="op">&lt;</span> 10, <span class="pred">par</span>(<span class="var">X</span>).
+
+<span class="com">% Ejemplo del módulo: afortunado si docente y vive en Lanús</span>
+<span class="pred">afortunado</span>(<span class="var">Persona</span>) :- <span class="pred">docente</span>(<span class="var">Persona</span>), <span class="pred">viveEn</span>(<span class="var">Persona</span>, <span class="ind">lanus</span>).</pre>
+</section>
+
+<!-- ══════════════ 13. RESUMEN FINAL ══════════════ -->
+<section id="resumen">
+  <div class="section-label">Resumen General</div>
+  <h2><span class="h2-num">13</span>Resumen y Errores Frecuentes</h2>
+
+  <h3>Conceptos clave de ambos módulos</h3>
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="sc-label">Predicado</div>
+      <div class="sc-val">Relación o propiedad. Se identifica por <code>nombre/aridad</code>.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Individuo (átomo)</div>
+      <div class="sc-val">Empieza con minúscula. Es un valor concreto del universo.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Variable</div>
+      <div class="sc-val">Empieza con MAYÚSCULA. Es una incógnita a resolver.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Variable anónima</div>
+      <div class="sc-val"><code>_</code> cuando el valor existe pero no nos importa cuál.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Hecho (cláusula)</div>
+      <div class="sc-val">Afirmación sin antecedentes. Se asume verdadera por estar en la base.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Regla</div>
+      <div class="sc-val"><code>consecuente :- antecedentes.</code> Se satisface si todos los antecedentes se cumplen.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Universo Cerrado</div>
+      <div class="sc-val">Todo lo que no puede probarse se asume FALSO. No hay hechos negativos.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Unificación</div>
+      <div class="sc-val">Ligar una variable a un valor como incógnita. Distinto de asignación.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Inversibilidad</div>
+      <div class="sc-val">Predicado inversible = admite consultas con variables libres en sus argumentos.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">AND (conjunción)</div>
+      <div class="sc-val">Coma entre antecedentes: <code>q :- p1, p2.</code></div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">OR (disyunción)</div>
+      <div class="sc-val">Dos cláusulas con la misma cabeza: <code>q :- p1.</code> y <code>q :- p2.</code></div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Def. por extensión</div>
+      <div class="sc-val">Enumerar todos los elementos con hechos.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Def. por comprensión</div>
+      <div class="sc-val">Definir el conjunto por características usando reglas.</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Backtracking</div>
+      <div class="sc-val">Mecanismo del motor para encontrar todas las soluciones posibles.</div>
+    </div>
+  </div>
+
+  <h3>Errores frecuentes de examen</h3>
+  <div class="callout callout-exam">
+    <div class="callout-title">📌 Checklist — antes del examen</div>
+    <br>
+    <span style="color:var(--accent)">✓</span> <strong>Mayúsculas/Minúsculas:</strong> <code>juan</code> = individuo, <code>Juan</code> = variable. Confundirlos da resultados incorrectos silenciosamente.<br><br>
+    <span style="color:var(--accent)">✓</span> <strong>Orden de argumentos:</strong> <code>come(juan, pizza)</code> ≠ <code>come(pizza, juan)</code>. Las relaciones no son bidireccionales.<br><br>
+    <span style="color:var(--accent)">✓</span> <strong>OR ≠ AND:</strong> OR se escribe con dos cláusulas separadas, NO con coma. La coma es AND.<br><br>
+    <span style="color:var(--accent)">✓</span> <strong>X = X + 1 es una contradicción</strong>, no un incremento. En lógica, una variable no puede ser igual a sí misma más uno.<br><br>
+    <span style="color:var(--accent)">✓</span> <strong>No escribir hechos negativos:</strong> bajo universo cerrado, lo que no está en la base ya es falso. Escribir <code>no_es_pasta(asado).</code> es redundante e incorrecto conceptualmente.<br><br>
+    <span style="color:var(--accent)">✓</span> <strong>Aridad exacta:</strong> consultar <code>come/3</code> cuando solo existe <code>come/2</code> genera un error, no simplemente <code>false</code>.<br><br>
+    <span style="color:var(--accent)">✓</span> <strong>Los predicados no "devuelven" valores:</strong> se satisfacen o no. No son funciones; no pueden usarse en expresiones.
+  </div>
+
+  <h3>Glosario de términos en español (terminología de la materia)</h3>
+  <p style="margin-bottom: 10px">
+    <span class="pill pill-green">predicado</span>
+    <span class="pill pill-green">individuo</span>
+    <span class="pill pill-green">átomo</span>
+    <span class="pill pill-green">aridad</span>
+    <span class="pill pill-blue">hecho</span>
+    <span class="pill pill-blue">cláusula</span>
+    <span class="pill pill-blue">cláusula de Horn</span>
+    <span class="pill pill-blue">consulta</span>
+    <span class="pill pill-blue">consulta existencial</span>
+    <span class="pill pill-purple">variable</span>
+    <span class="pill pill-purple">variable anónima</span>
+    <span class="pill pill-purple">unificación</span>
+    <span class="pill pill-purple">inversibilidad</span>
+    <span class="pill pill-orange">universo cerrado</span>
+    <span class="pill pill-orange">motor de inferencia</span>
+    <span class="pill pill-orange">backtracking</span>
+    <span class="pill pill-orange">def. por extensión</span>
+    <span class="pill pill-orange">def. por comprensión</span>
+  </p>
+</section>
+
+</body>
+</html>
