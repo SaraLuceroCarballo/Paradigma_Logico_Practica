@@ -13,6 +13,7 @@ para aprender y consolidar el **paradigma lógico** desde cero.
 ![](https://img.shields.io/badge/Lenguaje-Prolog-6B2D8B?style=flat-square)
 ![](https://img.shields.io/badge/Paradigma-Lógico-2D6A8B?style=flat-square)
 ![](https://img.shields.io/badge/Estado-En%20progreso-F0A500?style=flat-square)
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-ver_sitio-2ea043?style=flat-square)](https://saraluceroCarballo.github.io/Paradigma_Logico_Practica/)
 
 </div>
 
